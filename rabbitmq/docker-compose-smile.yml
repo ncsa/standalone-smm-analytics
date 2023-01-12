@@ -10,11 +10,14 @@ services:
   minio:
     image: minio/minio
     hostname: minio
-    ports:
-    - "9000:9000"
+    expose:
+      - "9000"
+      - "9001"
+    networks:
+      - default
     volumes:
     - "smile_content_data:/tmp"
-    command: server /tmp
+    command: server --console-address ":9001" /tmp
     environment:
     - MINIO_ACCESS_KEY=${AWS_ACCESSKEY}
     - MINIO_SECRET_KEY=${AWS_ACCESSKEYSECRET}
@@ -45,8 +48,11 @@ services:
     ports:
       - 80:80
       - 443:443
+      - 9000:9000
+      - 9001:9001
     depends_on:
       - smile-server
+      - minio
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
     restart: unless-stopped
 
