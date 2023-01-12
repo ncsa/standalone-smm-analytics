@@ -295,7 +295,7 @@ services:
 
   smile-server:
 #    build: /Users/cwang138/Documents/Macroscope/SMILE/www
-    image: socialmediamacroscope/smile_server:cilogon-alpha
+    image: socialmediamacroscope/smile_server:minio_no_port
     depends_on:
     - rabbitmq
     - minio
