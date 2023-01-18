@@ -29,3 +29,6 @@ numberbatch-en-17.04b.*
 */smile_data
 */smile_user
 */data
+
+# env file
+*.env
