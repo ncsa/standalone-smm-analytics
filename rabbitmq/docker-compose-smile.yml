@@ -3,48 +3,49 @@ version: "3.3"
 services:
   # webserver to handle all traffic. This can use let's encrypt to generate a SSL cert.
   traefik:
-    image: traefik:v1.7
+    # The official v2 Traefik docker image
+    image: traefik:v2.9
+    # Enables the web UI and tells Traefik to listen to docker
     command:
-      - --loglevel=INFO
-        #- --api
-      # Entrypoints
-      - --defaultentrypoints=https,http
-      - --entryPoints=Name:http Address::${TRAEFIK_HTTP_PORT:-8000} ${TRAEFIK_HTTP_REDIRECT:-""}
-      - --entryPoints=Name:https Address::${TRAEFIK_HTTPS_PORT:-8443} ${TRAEFIK_HTTPS_OPTIONS:-TLS}
-      # Configuration for acme (https://letsencrypt.org/)
-      - --acme=${TRAEFIK_ACME_ENABLE:-false}
-      #- --acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory
-      - --acme.email=${ADMIN_USER_ID:-""}
-      - --acme.entrypoint=https
-      - --acme.onhostrule=true
-      - --acme.storage=/config/acme.json
-      - --acme.httpchallenge.entrypoint=http
-      - --acme.storage=/config/acme.json
-      - --acme.acmelogging=true
-      - --acme.domains=${HOST_NAME:-""}
-      #- --acme.domains=${TRAEFIK_ADDITIONAL_HOST1:-""}
-      #- --acme.domains=${TRAEFIK_ADDITIONAL_HOST2:-""}
-      # DOCKER
-      - --docker=true
-      - --docker.endpoint=unix:///var/run/docker.sock
-      - --docker.exposedbydefault=false
-      - --docker.watch=true
-      # - --docker.domain=docker.localhost
-    restart: unless-stopped
-    ports:
-      - "${TRAEFIK_HTTP_PORT-8000}:${TRAEFIK_HTTP_PORT:-8000}"
-      - "${TRAEFIK_HTTPS_PORT-8443}:${TRAEFIK_HTTPS_PORT:-8443}"
+      #- "--log.level=DEBUG"
+      - --api.insecure=true
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --entrypoints.websecure.address=:443
+      - --certificatesresolvers.myresolver.acme.tlschallenge=true
+      #- "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+      - --certificatesresolvers.myresolver.acme.email=devops.isda@illinois.edu
+      - --certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json
     labels:
-      - "traefik.enable=true"
-      - "traefik.backend=traefik"
-      - "traefik.port=8080"
-      - "traefik.frontend.rule=PathPrefixStrip: /traefik"
-      - "traefik.website.frontend.whiteList.sourceRange=${TRAEFIK_IPFILTER:-172.16.0.0/12}"
+      - traefik.enable=true
+      - traefik.http.routers.traefik_https.rule= Host(`traefik.smm-tester.ncsa.illinois.edu`)
+      - traefik.http.routers.traefik_https.entrypoints=websecure
+      - traefik.http.routers.traefik_https.tls=true
+      - traefik.http.routers.traefik_https.tls.certResolver=myresolver
+      - traefik.http.routers.traefik_https.service=api@internal
+    dns:
+      - 1.1.1.1
+      - 1.0.0.1
+    ports:
+      # The HTTP port
+      - "80:80"
+      - "443:443"
+      # The Web UI (enabled by --api.insecure=true)
+      - "8080:8080"
     volumes:
+      # So that Traefik can listen to the Docker events
+      - /home/ywkim/workspace-smm/standalone-smm-analytics/rabbitmq/data/certbot/conf:/letsencrypt
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ${DATA:-~/docker_data}/traefik:/config
-    container_name: "traefik"
-      
+
+        #  whoami:
+        #    image: traefik/whoami
+        #    container_name: simple-service
+        #    labels:
+        #      - traefik.enable=true
+        #      - traefik.http.routers.whoami.rule=Host(`smm-tester.ncsa.illinois.edu`)
+        #      - traefik.http.routers.whoami.entrypoints=websecure
+        #      - traefik.http.routers.whoami.tls.certresolver=myresolver
+   
   rabbitmq:
     image: rabbitmq:3-management
     ports:
@@ -54,11 +55,21 @@ services:
   minio:
     image: minio/minio
     hostname: minio
+    depends_on:
+    - traefik
+    labels:
+    - traefik.enable=true
+    - traefik.http.routers.minio.rule=Host(`smm-tester.ncsa.illinois.edu`) && PathPrefix(`/minio`)
+      #- traefik.http.services.minio.loadbalancer.server.port=9000
+    - traefik.http.routers.minio.entrypoints=websecure
+    - traefik.http.routers.minio.tls=true  
+    - traefik.http.routers.minio.tls.certresolver=myresolver
     ports:
     - "9000:9000"
+    - "9001:9001"
     volumes:
     - "smile_content_data:/tmp"
-    command: server /tmp
+    command: server --console-address ":9001" /tmp
     environment:
     - MINIO_ACCESS_KEY=${AWS_ACCESSKEY}
     - MINIO_SECRET_KEY=${AWS_ACCESSKEYSECRET}
@@ -323,7 +334,8 @@ services:
 
   smile-server:
 #    build: /Users/cwang138/Documents/Macroscope/SMILE/www
-    image: socialmediamacroscope/smile_server:cilogon-alpha
+#image: socialmediamacroscope/smile_server:cilogon-alpha
+    image: socialmediamacroscope/smile_server:minio_no_port
     depends_on:
     - traefik        
     - rabbitmq
@@ -341,6 +353,11 @@ services:
     - algorithm-topic-modeling
     - algorithm-screen-name-prompt
     - image-crawler
+    labels:
+    - traefik.enable=true
+    - traefik.http.routers.smile_server.rule=Host(`smm-tester.ncsa.illinois.edu`) && PathPrefix(`/`)
+    - traefik.http.routers.smile_server.entrypoints=websecure
+    - traefik.http.routers.smile_server.tls.certresolver=myresolver
     ports:
     - "8001:8001"
     command: npm run docker-start
