@@ -1,5 +1,9 @@
 version: "3.3"
 
+#networks:
+#  traefik_proxy:
+#    external: true
+
 services:
   # webserver to handle all traffic. This can use let's encrypt to generate a SSL cert.
   traefik:
@@ -8,7 +12,7 @@ services:
     # Enables the web UI and tells Traefik to listen to docker
     command:
       #- "--log.level=DEBUG"
-      - --api.insecure=true
+      - --api.insecure=false
       - --providers.docker=true
       - --providers.docker.exposedbydefault=false
       - --entrypoints.websecure.address=:443
@@ -16,6 +20,8 @@ services:
       #- "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
       - --certificatesresolvers.myresolver.acme.email=devops.isda@illinois.edu
       - --certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json
+        #networks:
+        #- traefik_proxy
     labels:
       - traefik.enable=true
       - traefik.http.routers.traefik_https.rule= Host(`traefik.smm-tester.ncsa.illinois.edu`)
@@ -55,15 +61,31 @@ services:
   minio:
     image: minio/minio
     hostname: minio
-    depends_on:
-    - traefik
-    labels:
-    - traefik.enable=true
-    - traefik.http.routers.minio.rule=Host(`smm-tester.ncsa.illinois.edu`) && PathPrefix(`/minio`)
+    #depends_on:
+    #- traefik
+      #    labels:
+      #- traefik.enable=true
+      #- traefik.http.routers.minio.service=minio
+      #- traefik.http.routers.minio.rule=Host('s3.smm-tester.ncsa.illinois.edu') && (PathPrefix(`/`) || PathPrefix(`/{any:.*}/`) && (Headers(`hash`) || Headers(`9001`))
+      #- traefik.http.routers.minio.entrypoints=websecure
+      #- traefik.http.routers.minio.tls=true
+      #- traefik.http.routers.minio.tls.certResolver=myresolver
       #- traefik.http.services.minio.loadbalancer.server.port=9000
-    - traefik.http.routers.minio.entrypoints=websecure
-    - traefik.http.routers.minio.tls=true  
-    - traefik.http.routers.minio.tls.certresolver=myresolver
+      #- traefik.http.services.minio.loadbalancer.passhostheader=true
+    # Minio Console
+    #- traefik.http.routers.minio.rule=Host(`minio.smm-tester.ncsa.illinois.edu`)
+    #- traefik.http.routers.minio.tls=true"
+    #- traefik.http.routers.minio.tls.certresolver=resolver
+    #- traefik.http.routers.minio.service=minioService
+    #- traefik.http.services.minioService.loadbalancer.server.port=9001
+    #- traefik.http.services.minioService.loadbalancer.passhostheader=true
+    # Minio itself
+    #- traefik.http.routers.cdn.rule=Host(`cdn.smm-tester.ncsa.illinois.edu`)
+    #- traefik.http.routers.cdn.tls=true
+    #- traefik.http.routers.cdn.tls.certresolver=resolver
+    #- traefik.http.routers.cdn.service=cdnService
+    #- traefik.http.services.cdnService.loadbalancer.server.port=9000
+    #- traefik.http.services.cdnService.loadbalancer.passhostheader=true
     ports:
     - "9000:9000"
     - "9001:9001"
