@@ -12,6 +12,7 @@ docker_repo=socialmediamacroscope
 # set build and push option
 build=false
 push=false
+cleanup=false
 
 # set components selection
 autophrase=true
@@ -85,6 +86,10 @@ function build_and_push ()
   if [ "$push" = true ]; then
     docker push "$3"/"$1":"$2"
     docker push "$3"/"$1":latest
+  fi
+  if [ "$cleanup" = true ]; then
+    docker rmi "$3"/"$1":"$2"
+    docker rmi "$3"/"$1":latest
   fi
 }
 
