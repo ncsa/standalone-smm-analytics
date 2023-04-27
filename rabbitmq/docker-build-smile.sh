@@ -111,7 +111,7 @@ if [ "$check_screen_name" = true ]; then
 fi
 
 if [ "$classification_predict" = true ]; then
-  build_and_push autoclassification_predictphrase $classification_predict_version $docker_repo
+  build_and_push autoclassification_predict $classification_predict_version $docker_repo
 fi
 
 if [ "$classification_split" = true ]; then
