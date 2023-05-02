@@ -298,7 +298,7 @@ services:
       - HOST_IP=${HOST_IP}
       - RABBITMQ_HOST=${RABBITMQ_HOST}
       - CLOWDER_BASE_URL=${CLOWDER_BASE_URL}
-      - QUEUE_NAME=clowder_list
+      - QUEUE_NAME=clowder_create_space
     restart: unless-stopped
 
   clowder-create-dataset:
@@ -310,7 +310,7 @@ services:
       - HOST_IP=${HOST_IP}
       - RABBITMQ_HOST=${RABBITMQ_HOST}
       - CLOWDER_BASE_URL=${CLOWDER_BASE_URL}
-      - QUEUE_NAME=clowder_list
+      - QUEUE_NAME=clowder_create_dataset
     restart: unless-stopped
 
   clowder-create-collection:
@@ -322,7 +322,23 @@ services:
       - HOST_IP=${HOST_IP}
       - RABBITMQ_HOST=${RABBITMQ_HOST}
       - CLOWDER_BASE_URL=${CLOWDER_BASE_URL}
-      - QUEUE_NAME=clowder_list
+      - QUEUE_NAME=clowder_create_collection
+    restart: unless-stopped
+
+  clowder-upload-file:
+    image: socialmediamacroscope/clowder_upload_file:0.1.0
+    depends_on:
+      - rabbitmq
+    command: python3 ./rabbitmq_handler.py
+    environment:
+      - HOST_IP=${HOST_IP}
+      - MINIO_URL=${MINIO_URL}
+      - AWS_ACCESSKEY=${AWS_ACCESSKEY}
+      - AWS_ACCESSKEYSECRET=${AWS_ACCESSKEYSECRET}
+      - BUCKET_NAME=${BUCKET_NAME}
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+      - CLOWDER_BASE_URL=${CLOWDER_BASE_URL}
+      - QUEUE_NAME=clowder_upload_file
     restart: unless-stopped
 
   smile-server:

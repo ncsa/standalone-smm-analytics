@@ -7,6 +7,8 @@ import pika
 import requests
 import writeToS3 as s3
 
+RABBITMQ_HOST = os.getenv('RABBITMQ_HOST', 'rabbitmq')
+
 
 def get_config_json(config_url):
     # download config data to json
@@ -27,6 +29,9 @@ def get_config_json(config_url):
 
 
 def rabbitmq_handler(ch, method, properties, body):
+
+    clowder_base_url = os.getenv('CLOWDER_BASE_URL', 'https://clowder.smm.ncsa.illinois.edu/')
+
     try:
         # basic fields
         event = json.loads(body)
@@ -52,7 +57,7 @@ def rabbitmq_handler(ch, method, properties, body):
                 raise ValueError('Cannot find file:' + os.path.join(localPath, filename) + ' in the remote storage!')
 
             r = requests.post(
-                'https://socialmediamacroscope.ncsa.illinois.edu/clowder/api/uploadToDataset/' + dataset_id +
+                clowder_base_url + 'api/uploadToDataset/' + dataset_id +
                 '?extract=true',
                 files=[('File', open(os.path.join(localPath, filename), 'rb'))],
                 auth=auth)
@@ -64,8 +69,7 @@ def rabbitmq_handler(ch, method, properties, body):
                 file_ids.append(r.json()['id'])
 
             # add config file to metadata (default)
-            config_metadata_r = requests.post('https://socialmediamacroscope.ncsa.illinois.edu' +
-                                              '/clowder/api/files/' + r.json()['id'] + '/metadata',
+            config_metadata_r = requests.post(clowder_base_url + 'api/files/' + r.json()['id'] + '/metadata',
                                               data=json.dumps(config_json),
                                               headers={"Content-Type": "application/json"},
                                               auth=auth)
@@ -76,8 +80,7 @@ def rabbitmq_handler(ch, method, properties, body):
             # add tags
             if 'tags' in file.keys():
                 tag_payload = json.dumps({'tags': file['tags']})
-                tag_r = requests.post('https://socialmediamacroscope.ncsa.illinois.edu/' +
-                                      'clowder/api/files/' + r.json()['id'] + '/tags',
+                tag_r = requests.post(clowder_base_url + 'api/files/' + r.json()['id'] + '/tags',
                                       data=tag_payload,
                                       headers={"Content-Type": "application/json"},
                                       auth=auth)
@@ -87,8 +90,7 @@ def rabbitmq_handler(ch, method, properties, body):
             # add metadata
             if 'metadata' in file.keys():
                 metadata_payload = json.dumps(file['metadata'])
-                metadata_r = requests.post('https://socialmediamacroscope.ncsa.illinois.edu' +
-                                           '/clowder/api/files/' + r.json()['id'] + '/metadata',
+                metadata_r = requests.post(clowder_base_url + 'api/files/' + r.json()['id'] + '/metadata',
                                            data=metadata_payload,
                                            headers={"Content-Type": "application/json"},
                                            auth=auth)
@@ -99,8 +101,7 @@ def rabbitmq_handler(ch, method, properties, body):
             # add description
             if 'descriptions' in file.keys():
                 description_payload = json.dumps({'description': file['descriptions']})
-                description_r = requests.put('https://socialmediamacroscope.ncsa.illinois.edu/clowder' +
-                                             '/api/files/' + r.json()['id'] + '/updateDescription',
+                description_r = requests.put(clowder_base_url + 'api/files/' + r.json()['id'] + '/updateDescription',
                                              data=description_payload,
                                              headers={"Content-Type": "application/json"},
                                              auth=auth)
@@ -130,7 +131,7 @@ def rabbitmq_handler(ch, method, properties, body):
 
 
 if __name__ == '__main__':
-    connection = pika.BlockingConnection(pika.ConnectionParameters(port=5672, host="rabbitmq"))
+    connection = pika.BlockingConnection(pika.ConnectionParameters(port=5672, host=RABBITMQ_HOST))
     channel = connection.channel()
 
     # pass the queue name in environment variable

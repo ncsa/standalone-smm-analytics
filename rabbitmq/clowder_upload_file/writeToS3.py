@@ -3,7 +3,7 @@ import mimetypes
 import os
 from botocore.client import Config
 
-client = boto3.client('s3', endpoint_url='http://' + os.environ['HOST_IP'] + ':9000',
+client = boto3.client('s3', endpoint_url = os.environ['MINIO_URL'],
                       aws_access_key_id = os.environ['AWS_ACCESSKEY'],
                       aws_secret_access_key = os.environ['AWS_ACCESSKEYSECRET'],
                       config=Config(signature_version='s3v4'))
@@ -56,15 +56,6 @@ def putObject(body, remoteKey):
     obj = client.put_object(Bucket=bucket_name,
                             Body=body, Key=remoteKey)
     print(obj['Body'].read())
-
-
-# def checkExist(remotepath, filename):
-#     results = client.list_objects(Bucket=bucket_name, Prefix=os.path.join(remotepath, filename))
-#     print(results)
-#     if 'Contents' in results:
-#         return True
-#     else:
-#         return False
 
 def listDir(remoteClass):
     objects = client.list_objects(Bucket=bucket_name,
