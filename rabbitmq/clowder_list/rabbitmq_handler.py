@@ -4,7 +4,6 @@ import traceback
 
 import pika
 import requests
-import urlparse
 
 RABBITMQ_HOST = os.getenv('RABBITMQ_HOST', 'rabbitmq')
 
@@ -19,14 +18,14 @@ def rabbitmq_handler(ch, method, properties, body):
         auth = (event['username'], event['password'])
 
         if event['item'] == 'dataset':
-            r = requests.get(urlparse.urljoin(clowder_base_url, 'api/datasets'), auth=auth)
+            r = requests.get(clowder_base_url + 'api/datasets', auth=auth)
         elif event['item'] == 'collection':
-            r = requests.get(urlparse.urljoin(clowder_base_url, 'api/collections/allCollections'), auth=auth)
+            r = requests.get(clowder_base_url + 'api/collections/allCollections', auth=auth)
         elif event['item'] == 'space':
-            r = requests.get(urlparse.urljoin(clowder_base_url, 'api/spaces/canEdit'), auth=auth)
+            r = requests.get(clowder_base_url + 'api/spaces/canEdit', auth=auth)
         # use a global key here be careful of this information!!
         elif event['item'] == 'user':
-            r = requests.get(urlparse.urljoin(clowder_base_url, 'api/users?key=Globalkey'), auth=auth)
+            r = requests.get(clowder_base_url + 'api/users?key=Globalkey', auth=auth)
         else:
             return {'info': 'cannot list ' + event['item'], 'data': ['error']}
 
