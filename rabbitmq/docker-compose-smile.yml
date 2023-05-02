@@ -23,8 +23,8 @@ services:
   redis:
     image: redis
     hostname: redis
-#    ports:
-#    - "6379:6379"
+    ports:
+    - "6379:6379"
     restart: unless-stopped
 
   nginx:
@@ -57,6 +57,7 @@ services:
     command: python ./rabbitmq_handler.py
     environment:
     - HOST_IP=${HOST_IP}
+    - RABBITMQ_HOST=${RABBITMQ_HOST}
     - AWS_ACCESSKEY=${AWS_ACCESSKEY}
     - AWS_ACCESSKEYSECRET=${AWS_ACCESSKEYSECRET}
     - BUCKET_NAME=${BUCKET_NAME}
@@ -72,6 +73,7 @@ services:
     command: python ./rabbitmq_handler.py
     environment:
     - HOST_IP=${HOST_IP}
+    - RABBITMQ_HOST=${RABBITMQ_HOST}
     - AWS_ACCESSKEY=${AWS_ACCESSKEY}
     - AWS_ACCESSKEYSECRET=${AWS_ACCESSKEYSECRET}
     - BUCKET_NAME=${BUCKET_NAME}
@@ -87,6 +89,7 @@ services:
     command: python ./rabbitmq_handler.py
     environment:
     - HOST_IP=${HOST_IP}
+    - RABBITMQ_HOST=${RABBITMQ_HOST}
     - AWS_ACCESSKEY=${AWS_ACCESSKEY}
     - AWS_ACCESSKEYSECRET=${AWS_ACCESSKEYSECRET}
     - BUCKET_NAME=${BUCKET_NAME}
@@ -102,6 +105,7 @@ services:
     command: python ./rabbitmq_handler.py
     environment:
     - HOST_IP=${HOST_IP}
+    - RABBITMQ_HOST=${RABBITMQ_HOST}
     - AWS_ACCESSKEY=${AWS_ACCESSKEY}
     - AWS_ACCESSKEYSECRET=${AWS_ACCESSKEYSECRET}
     - BUCKET_NAME=${BUCKET_NAME}
@@ -117,6 +121,7 @@ services:
     command: python ./rabbitmq_handler.py
     environment:
     - HOST_IP=${HOST_IP}
+    - RABBITMQ_HOST=${RABBITMQ_HOST}
     - AWS_ACCESSKEY=${AWS_ACCESSKEY}
     - AWS_ACCESSKEYSECRET=${AWS_ACCESSKEYSECRET}
     - BUCKET_NAME=${BUCKET_NAME}
@@ -136,6 +141,7 @@ services:
     command: python ./rabbitmq_handler.py
     environment:
     - HOST_IP=${HOST_IP}
+    - RABBITMQ_HOST=${RABBITMQ_HOST}
     - AWS_ACCESSKEY=${AWS_ACCESSKEY}
     - AWS_ACCESSKEYSECRET=${AWS_ACCESSKEYSECRET}
     - BUCKET_NAME=${BUCKET_NAME}
@@ -155,6 +161,7 @@ services:
     command: python ./rabbitmq_handler.py
     environment:
     - HOST_IP=${HOST_IP}
+    - RABBITMQ_HOST=${RABBITMQ_HOST}
     - AWS_ACCESSKEY=${AWS_ACCESSKEY}
     - AWS_ACCESSKEYSECRET=${AWS_ACCESSKEYSECRET}
     - BUCKET_NAME=${BUCKET_NAME}
@@ -174,6 +181,7 @@ services:
     command: python ./screen_name_prompt.py
     environment:
     - HOST_IP=${HOST_IP}
+    - RABBITMQ_HOST=${RABBITMQ_HOST}
     - AWS_ACCESSKEY=${AWS_ACCESSKEY}
     - AWS_ACCESSKEYSECRET=${AWS_ACCESSKEYSECRET}
     - BUCKET_NAME=${BUCKET_NAME}
@@ -189,6 +197,7 @@ services:
     command: python ./rabbitmq_handler.py
     environment:
     - HOST_IP=${HOST_IP}
+    - RABBITMQ_HOST=${RABBITMQ_HOST}
     - AWS_ACCESSKEY=${AWS_ACCESSKEY}
     - AWS_ACCESSKEYSECRET=${AWS_ACCESSKEYSECRET}
     - BUCKET_NAME=${BUCKET_NAME}
@@ -208,6 +217,7 @@ services:
     command: python3 ./rabbitmq_handler.py
     environment:
     - HOST_IP=${HOST_IP}
+    - RABBITMQ_HOST=${RABBITMQ_HOST}
     - AWS_ACCESSKEY=${AWS_ACCESSKEY}
     - AWS_ACCESSKEYSECRET=${AWS_ACCESSKEYSECRET}
     - BUCKET_NAME=${BUCKET_NAME}
@@ -227,6 +237,7 @@ services:
     command: python3 ./rabbitmq_handler.py
     environment:
     - HOST_IP=${HOST_IP}
+    - RABBITMQ_HOST=${RABBITMQ_HOST}
     - AWS_ACCESSKEY=${AWS_ACCESSKEY}
     - AWS_ACCESSKEYSECRET=${AWS_ACCESSKEYSECRET}
     - BUCKET_NAME=${BUCKET_NAME}
@@ -246,6 +257,7 @@ services:
     command: python3 ./rabbitmq_handler.py
     environment:
     - HOST_IP=${HOST_IP}
+    - RABBITMQ_HOST=${RABBITMQ_HOST}
     - AWS_ACCESSKEY=${AWS_ACCESSKEY}
     - AWS_ACCESSKEYSECRET=${AWS_ACCESSKEYSECRET}
     - BUCKET_NAME=${BUCKET_NAME}
@@ -265,6 +277,7 @@ services:
     command: python3 ./rabbitmq_handler.py
     environment:
     - HOST_IP=${HOST_IP}
+    - RABBITMQ_HOST=${RABBITMQ_HOST}
     - REDDIT_CLIENT_ID=${REDDIT_CLIENT_ID}
     - REDDIT_CLIENT_SECRET=${REDDIT_CLIENT_SECRET}
     - AWS_ACCESSKEY=${AWS_ACCESSKEY}
@@ -279,7 +292,7 @@ services:
 
   smile-server:
 #    build: /Users/cwang138/Documents/Macroscope/SMILE/www
-    image: socialmediamacroscope/smile_server:latest
+    image: socialmediamacroscope/smile_server:0.2.4
     depends_on:
     - rabbitmq
     - minio
@@ -303,7 +316,10 @@ services:
     - HOME=${HOME}
     - DOCKERIZED=${DOCKERIZED}
     - LOCAL_ALGORITHM=${LOCAL_ALGORITHM}
-    - HOST_IP=${HOST_IP}
+    - MINIO_URL=${MINIO_URL}
+    - REDIS_URL=${REDIS_URL}
+    - SMILE_GRAPHQL_URL=${SMILE_GRAPHQL_URL}
+    - RABBITMQ_URL=${RABBITMQ_HOST}
     - BUCKET_NAME=${BUCKET_NAME}
     - AWS_ACCESSKEY=${AWS_ACCESSKEY}
     - AWS_ACCESSKEYSECRET=${AWS_ACCESSKEYSECRET}
