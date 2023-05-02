@@ -219,7 +219,7 @@ services:
 
   algorithm-name-entity-recognition:
 #    build: ./name_entity_recognition
-    image: socialmediamacroscope/name_entity_recognition:0.1.1
+    image: socialmediamacroscope/name_entity_recognition:0.1.0
     depends_on:
     - rabbitmq
     - minio
@@ -240,7 +240,7 @@ services:
 
   algorithm-autophrase:
 #    build: ./autophrase
-    image: socialmediamacroscope/autophrase:0.1.1
+    image: socialmediamacroscope/autophrase:0.1.2
     depends_on:
     - rabbitmq
     - minio
