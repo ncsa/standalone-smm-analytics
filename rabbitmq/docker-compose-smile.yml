@@ -277,6 +277,18 @@ services:
     - EMAIL_PASSWORD=${EMAIL_PASSWORD}
     restart: unless-stopped
 
+  clowder-list:
+    image: socialmediamacroscope/clowder_list:0.1.0
+    depends_on:
+      - rabbitmq
+    command: python3 ./rabbitmq_handler.py
+    environment:
+      - HOST_IP=${HOST_IP}
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+      - CLOWDER_BASE_URL=${CLOWDER_BASE_URL}
+      - QUEUE_NAME=clowder_list
+    restart: unless-stopped
+
   smile-server:
 #    build: /Users/cwang138/Documents/Macroscope/SMILE/www
     image: socialmediamacroscope/smile_server:latest
