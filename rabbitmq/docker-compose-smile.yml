@@ -402,7 +402,7 @@ services:
       - HOST_IP=${HOST_IP}
       - RABBITMQ_HOST=${RABBITMQ_HOST}
       - CLOWDER_BASE_URL=${CLOWDER_BASE_URL}
-      - QUEUE_NAME=clowder_list
+      - QUEUE_NAME=lambda_list_clowder
     restart: unless-stopped
 
   clowder-create-space:
@@ -426,7 +426,7 @@ services:
       - HOST_IP=${HOST_IP}
       - RABBITMQ_HOST=${RABBITMQ_HOST}
       - CLOWDER_BASE_URL=${CLOWDER_BASE_URL}
-      - QUEUE_NAME=clowder_create_dataset
+      - QUEUE_NAME=lambda_invoke_clowder
     restart: unless-stopped
 
   clowder-create-collection:
@@ -455,7 +455,7 @@ services:
       - BUCKET_NAME=${BUCKET_NAME}
       - RABBITMQ_HOST=${RABBITMQ_HOST}
       - CLOWDER_BASE_URL=${CLOWDER_BASE_URL}
-      - QUEUE_NAME=clowder_upload_file
+      - QUEUE_NAME=lambda_upload_clowder
     restart: unless-stopped
 
 volumes:
