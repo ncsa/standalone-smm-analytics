@@ -318,7 +318,8 @@ services:
 
   smile-server:
 #    build: /Users/cwang138/Documents/Macroscope/SMILE/www
-    image: socialmediamacroscope/smile_server:0.2.4
+#    image: socialmediamacroscope/smile_server:0.2.4
+    image: socialmediamacroscope/smile_server:local-clowder-test
     depends_on:
     - rabbitmq
     - minio
@@ -334,7 +335,11 @@ services:
     - algorithm-name-entity-recognition
     - algorithm-topic-modeling
     - algorithm-screen-name-prompt
-    - image-crawler
+    - clowder-create-collection
+    - clowder-create-dataset
+    - clowder-create-space
+    - clowder-list
+    - clowder-upload-file
     ports:
     - "8001:8001"
     command: npm run docker-start
