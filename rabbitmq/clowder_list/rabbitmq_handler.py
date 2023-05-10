@@ -11,6 +11,7 @@ RABBITMQ_HOST = os.getenv('RABBITMQ_HOST', 'rabbitmq')
 def rabbitmq_handler(ch, method, properties, body):
 
     clowder_base_url = os.getenv('CLOWDER_BASE_URL', 'https://clowder.smm.ncsa.illinois.edu/')
+    clowder_global_key = os.getenv('CLOWDER_GLOBAL_KEY', "")
 
     try:
         # basic fields
@@ -20,12 +21,12 @@ def rabbitmq_handler(ch, method, properties, body):
         if event['item'] == 'dataset':
             r = requests.get(clowder_base_url + 'api/datasets', auth=auth)
         elif event['item'] == 'collection':
-            r = requests.get(clowder_base_url + 'api/collections/allCollections', auth=auth)
+            r = requests.get(clowder_base_url + 'api/collections/canEdit', auth=auth)
         elif event['item'] == 'space':
             r = requests.get(clowder_base_url + 'api/spaces/canEdit', auth=auth)
         # use a global key here be careful of this information!!
         elif event['item'] == 'user':
-            r = requests.get(clowder_base_url + 'api/users?key=Globalkey', auth=auth)
+            r = requests.get(clowder_base_url + 'api/users?key=' + clowder_global_key, auth=auth)
         else:
             return {'info': 'cannot list ' + event['item'], 'data': ['error']}
 

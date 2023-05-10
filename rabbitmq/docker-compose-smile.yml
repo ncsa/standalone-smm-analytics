@@ -402,6 +402,7 @@ services:
       - HOST_IP=${HOST_IP}
       - RABBITMQ_HOST=${RABBITMQ_HOST}
       - CLOWDER_BASE_URL=${CLOWDER_BASE_URL}
+      - CLOWDER_GLOBAL_KEY=${CLOWDER_GLOBAL_KEY}
       - QUEUE_NAME=lambda_list_clowder
     restart: unless-stopped
 

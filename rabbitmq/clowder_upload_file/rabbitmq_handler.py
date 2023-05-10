@@ -42,7 +42,7 @@ def rabbitmq_handler(ch, method, properties, body):
         config_json = get_config_json(config_url)
 
         # upload files
-        file_ids = []
+        file_full_urls = []
         for file in event['payload']['files']:
             # parse url to extract filename, localPath, and awsPath
             path = urlparse(file['url']).path.split('/')
@@ -66,7 +66,7 @@ def rabbitmq_handler(ch, method, properties, body):
                 raise ValueError("cannot upload these files to dataset: " +
                                  dataset_id + ". error:" + r.text)
             else:
-                file_ids.append(r.json()['id'])
+                file_full_urls.append(clowder_base_url + '/files/' + r.json()['id'])
 
             # add config file to metadata (default)
             config_metadata_r = requests.post(clowder_base_url + 'api/files/' + r.json()['id'] + '/metadata',
@@ -110,7 +110,7 @@ def rabbitmq_handler(ch, method, properties, body):
                         'cannot add descriptions to this file: ' + r.json()['id'] + ". error: " + description_r.text)
 
         resp = {'info': 'You have successfully uploaded all the files to your specified dataset!',
-                'ids': file_ids}
+                'urls': file_full_urls}
 
     except BaseException as e:
         resp = {
