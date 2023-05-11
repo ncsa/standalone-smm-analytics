@@ -318,8 +318,7 @@ services:
 
   smile-server:
 #    build: /Users/cwang138/Documents/Macroscope/SMILE/www
-#    image: socialmediamacroscope/smile_server:0.2.4
-    image: socialmediamacroscope/smile_server:local-clowder-test
+    image: socialmediamacroscope/smile_server:0.2.5
     depends_on:
     - rabbitmq
     - minio

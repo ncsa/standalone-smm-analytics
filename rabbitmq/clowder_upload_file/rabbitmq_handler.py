@@ -110,7 +110,7 @@ def rabbitmq_handler(ch, method, properties, body):
                         'cannot add descriptions to this file: ' + r.json()['id'] + ". error: " + description_r.text)
 
         resp = {'info': 'You have successfully uploaded all the files to your specified dataset!',
-                'urls': file_urls}
+                'ids': file_urls}
 
     except BaseException as e:
         resp = {
