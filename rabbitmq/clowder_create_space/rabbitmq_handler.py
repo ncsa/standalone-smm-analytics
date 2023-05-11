@@ -49,7 +49,7 @@ def rabbitmq_handler(ch, method, properties, body):
         if 'descriptions' in event['payload'].keys():
             data['description'] = event['payload']['descriptions']
         else:
-            # important: description seems to be an required parameter
+            # important: description seems to be a required parameter
             data['description'] = ''
 
         r = requests.post(clowder_base_url + 'api/spaces',

@@ -19,7 +19,7 @@ def rabbitmq_handler(ch, method, properties, body):
         auth = (event['username'], event['password'])
 
         if event['item'] == 'dataset':
-            r = requests.get(clowder_base_url + 'api/datasets', auth=auth)
+            r = requests.get(clowder_base_url + 'api/datasets/canEdit', auth=auth)
         elif event['item'] == 'collection':
             r = requests.get(clowder_base_url + 'api/collections/canEdit', auth=auth)
         elif event['item'] == 'space':
