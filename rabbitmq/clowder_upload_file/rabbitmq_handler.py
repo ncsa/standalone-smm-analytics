@@ -1,7 +1,6 @@
 import json
 import os
 import traceback
-from urllib.parse import urlparse
 
 import pika
 import requests

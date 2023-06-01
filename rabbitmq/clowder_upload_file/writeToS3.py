@@ -54,14 +54,14 @@ def downloadUrlToDisk(url, filename=None):
     resp = requests.get(url)
     resp.raise_for_status()  # Check if the request was successful
 
-    localPath = os.path.join('/tmp', url.split("/")[-2])
-    if not os.path.exists(localPath):
-        os.makedirs(localPath)
+    localpath = os.path.join('/tmp', url.split("/")[-2])
+    if not os.path.exists(localpath):
+        os.makedirs(localpath)
 
     with open(os.path.join(localpath, filename), 'wb') as f:
         f.write(resp.content)
 
-    return localPath, filename
+    return localpath, filename
 
 def getObject(remoteKey):
     obj = client.get_object(Bucket=bucket_name, Key=remoteKey)
