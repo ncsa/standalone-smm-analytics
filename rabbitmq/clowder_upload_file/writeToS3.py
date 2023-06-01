@@ -6,8 +6,7 @@ from botocore.client import Config
 import requests
 from urllib.parse import urlparse
 
-
-client = boto3.client('s3', endpoint_url = os.environ['MINIO_URL'],
+client = boto3.client('s3', endpoint_url = os.environ['MINIO_PUBLIC_ACCESS_URL'],
                       aws_access_key_id = os.environ['AWS_ACCESSKEY'],
                       aws_secret_access_key = os.environ['AWS_ACCESSKEYSECRET'],
                       config=Config(signature_version='s3v4'))
