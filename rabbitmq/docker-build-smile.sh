@@ -10,38 +10,38 @@
 docker_repo=socialmediamacroscope
 
 # set build and push option
-build=false
-push=false
-cleanup=false
+build=true
+push=true
+cleanup=true
 
 # set components selection
-autophrase=true
+autophrase=false
 biometer_check_bot=false
 bulk_comparison=false
 check_screen_name=false
-classification_predict=true
-classification_split=true
-classification_train=true
+classification_predict=false
+classification_split=false
+classification_train=false
 clowder_create_collection=false
 clowder_create_dataset=false
 clowder_create_space=false
 clowder_list=false
 clowder_upload_file=false
-collect_reddit_comment=true
+collect_reddit_comment=false
 collect_timeline=false
 crimson_hexagon_monitors=false
 get_personality=false
 get_sim_score=false
-histogram=true
-image_crawler=true
-name_entity_recognition=true
-network_analysis=true
+histogram=false
+image_crawler=false
+name_entity_recognition=false
+network_analysis=false
 nginx=false
 nginx_wo_ssl=false
-preprocessing=true
-screen_name_prompt=true
+preprocessing=false
+screen_name_prompt=false
 sentiment_analysis=true
-topic_modeling=true
+topic_modeling=false
 utku_brand_personality=false
 
 # set version numbers
@@ -70,7 +70,7 @@ nginx_version_version=1.0.0
 nginx_wo_ssl_version=1.0.0
 preprocessing_version=0.1.2
 screen_name_prompt_version=0.1.2
-sentiment_analysis_version=0.1.2
+sentiment_analysis_version=0.1.4
 topic_modeling_version=0.1.2
 utku_brand_personality_version=1.0.0
 
