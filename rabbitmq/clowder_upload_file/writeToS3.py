@@ -3,6 +3,8 @@ import mimetypes
 import os
 from botocore.client import Config
 
+import requests
+
 client = boto3.client('s3', endpoint_url = os.environ['MINIO_URL'],
                       aws_access_key_id = os.environ['AWS_ACCESSKEY'],
                       aws_secret_access_key = os.environ['AWS_ACCESSKEYSECRET'],
@@ -46,6 +48,20 @@ def downloadToDisk(filename, localpath, remotepath):
         client.download_fileobj(bucket_name,
                                 os.path.join(remotepath, filename), f)
 
+def downloadUrlToDisk(url, filename=None):
+    if filename is None:
+        filename = os.path.basename(url)
+    resp = requests.get(url)
+    resp.raise_for_status()  # Check if the request was successful
+
+    localPath = os.path.join('/tmp', url.split("/")[-2])
+    if not os.path.exists(localPath):
+        os.makedirs(localPath)
+
+    with open(os.path.join(localpath, filename), 'wb') as f:
+        f.write(resp.content)
+
+    return localPath, filename
 
 def getObject(remoteKey):
     obj = client.get_object(Bucket=bucket_name, Key=remoteKey)

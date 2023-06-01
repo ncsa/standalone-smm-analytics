@@ -12,17 +12,10 @@ RABBITMQ_HOST = os.getenv('RABBITMQ_HOST', 'rabbitmq')
 
 def get_config_json(config_url):
     # download config data to json
-    # parse url to extract filename, localPath, and awsPath
-    path = urlparse(config_url).path.split('/')
-    filename = path[-1]
-    localPath = os.path.join('/tmp', path[2])
-    if not os.path.exists(localPath):
-        os.makedirs(localPath)
-    awsPath = '/'.join(path[2:-1])
     try:
-        s3.downloadToDisk(filename, localPath, awsPath)
+        localPath, filename = s3.downloadUrlToDisk(config_url)
     except:
-        raise ValueError('Cannot find file:' + os.path.join(localPath, filename) + ' in the remote storage!')
+        raise ValueError('Cannot find file in the remote storage!')
 
     with open(os.path.join(localPath, filename), 'r') as f:
         return json.load(f)
@@ -44,17 +37,10 @@ def rabbitmq_handler(ch, method, properties, body):
         # upload files
         file_urls = []
         for file in event['payload']['files']:
-            # parse url to extract filename, localPath, and awsPath
-            path = urlparse(file['url']).path.split('/')
-            filename = path[-1]
-            localPath = os.path.join('/tmp', path[2])
-            if not os.path.exists(localPath):
-                os.makedirs(localPath)
-            awsPath = '/'.join(path[2:-1])
             try:
-                s3.downloadToDisk(filename, localPath, awsPath)
+                localPath, filename = s3.downloadUrlToDisk(file['url'])
             except:
-                raise ValueError('Cannot find file:' + os.path.join(localPath, filename) + ' in the remote storage!')
+                raise ValueError('Cannot find file: in the remote storage!')
 
             r = requests.post(
                 clowder_base_url + 'api/uploadToDataset/' + dataset_id +
