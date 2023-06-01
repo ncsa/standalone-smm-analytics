@@ -51,14 +51,16 @@ def downloadToDisk(filename, localpath, remotepath):
                                 os.path.join(remotepath, filename), f)
 
 def downloadUrlToDisk(url, filename=None):
+    parsed_url = urlparse(url)
+    paths = parsed_url.path.split("/")
+
     if filename is None:
-        parsed_url = urlparse(url)
-        filename = parsed_url.path.split("/")[-1]
+        filename = paths[-1]
 
     resp = requests.get(url)
     resp.raise_for_status()  # Check if the request was successful
 
-    localpath = os.path.join('/tmp', url.split("/")[-2])
+    localpath = os.path.join('/tmp', "/".join(paths[1:-1]))
     if not os.path.exists(localpath):
         os.makedirs(localpath)
 
