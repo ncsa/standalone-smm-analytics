@@ -428,7 +428,7 @@ services:
     restart: unless-stopped
 
   clowder-upload-file:
-    image: socialmediamacroscope/clowder_upload_file:0.1.1
+    image: socialmediamacroscope/clowder_upload_file:0.1.2
     depends_on:
       - rabbitmq
     command: python3 ./rabbitmq_handler.py
