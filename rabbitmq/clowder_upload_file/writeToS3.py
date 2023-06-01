@@ -4,6 +4,8 @@ import os
 from botocore.client import Config
 
 import requests
+from urllib.parse import urlparse
+
 
 client = boto3.client('s3', endpoint_url = os.environ['MINIO_URL'],
                       aws_access_key_id = os.environ['AWS_ACCESSKEY'],
@@ -50,7 +52,9 @@ def downloadToDisk(filename, localpath, remotepath):
 
 def downloadUrlToDisk(url, filename=None):
     if filename is None:
-        filename = os.path.basename(url)
+        parsed_url = urlparse(url)
+        filename = parsed_url.path.split("/")[-1]
+
     resp = requests.get(url)
     resp.raise_for_status()  # Check if the request was successful
 
