@@ -10,38 +10,38 @@
 docker_repo=socialmediamacroscope
 
 # set build and push option
-build=true
-push=true
-cleanup=true
+build=false
+push=false
+cleanup=false
 
 # set components selection
-autophrase=false
+autophrase=true
 biometer_check_bot=false
 bulk_comparison=false
 check_screen_name=false
-classification_predict=false
-classification_split=false
-classification_train=false
+classification_predict=true
+classification_split=true
+classification_train=true
 clowder_create_collection=false
 clowder_create_dataset=false
 clowder_create_space=false
 clowder_list=false
 clowder_upload_file=false
-collect_reddit_comment=false
+collect_reddit_comment=true
 collect_timeline=false
 crimson_hexagon_monitors=false
 get_personality=false
 get_sim_score=false
-histogram=false
-image_crawler=false
-name_entity_recognition=false
-network_analysis=false
+histogram=true
+image_crawler=true
+name_entity_recognition=true
+network_analysis=true
 nginx=false
 nginx_wo_ssl=false
-preprocessing=false
-screen_name_prompt=false
+preprocessing=true
+screen_name_prompt=true
 sentiment_analysis=true
-topic_modeling=false
+topic_modeling=true
 utku_brand_personality=false
 
 # set version numbers
