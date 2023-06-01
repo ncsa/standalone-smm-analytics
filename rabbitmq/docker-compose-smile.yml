@@ -384,7 +384,6 @@ services:
       - rabbitmq
     command: python3 ./rabbitmq_handler.py
     environment:
-      - HOST_IP=${HOST_IP}
       - RABBITMQ_HOST=${RABBITMQ_HOST}
       - CLOWDER_BASE_URL=${CLOWDER_BASE_URL}
       - CLOWDER_GLOBAL_KEY=${CLOWDER_GLOBAL_KEY}
@@ -397,7 +396,6 @@ services:
       - rabbitmq
     command: python3 ./rabbitmq_handler.py
     environment:
-      - HOST_IP=${HOST_IP}
       - RABBITMQ_HOST=${RABBITMQ_HOST}
       - CLOWDER_BASE_URL=${CLOWDER_BASE_URL}
       - QUEUE_NAME=clowder_create_space
@@ -409,7 +407,6 @@ services:
       - rabbitmq
     command: python3 ./rabbitmq_handler.py
     environment:
-      - HOST_IP=${HOST_IP}
       - RABBITMQ_HOST=${RABBITMQ_HOST}
       - CLOWDER_BASE_URL=${CLOWDER_BASE_URL}
       - QUEUE_NAME=lambda_invoke_clowder
@@ -421,7 +418,6 @@ services:
       - rabbitmq
     command: python3 ./rabbitmq_handler.py
     environment:
-      - HOST_IP=${HOST_IP}
       - RABBITMQ_HOST=${RABBITMQ_HOST}
       - CLOWDER_BASE_URL=${CLOWDER_BASE_URL}
       - QUEUE_NAME=clowder_create_collection
@@ -433,8 +429,6 @@ services:
       - rabbitmq
     command: python3 ./rabbitmq_handler.py
     environment:
-      - HOST_IP=${HOST_IP}
-      - MINIO_URL=${MINIO_URL}
       - MINIO_PUBLIC_ACCESS_URL=${MINIO_PUBLIC_ACCESS_URL}
       - AWS_ACCESSKEY=${AWS_ACCESSKEY}
       - AWS_ACCESSKEYSECRET=${AWS_ACCESSKEYSECRET}
