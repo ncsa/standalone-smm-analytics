@@ -139,7 +139,7 @@ def rabbitmq_handler(ch, method, properties, body):
 if __name__ == '__main__':
     credentials = pika.PlainCredentials(RABBITMQ_USER, RABBITMQ_PASSWORD)
     parameters = pika.ConnectionParameters(RABBITMQ_HOST, 5672, '/', credentials)
-    connection = pika.BlockingConnection(pika.ConnectionParameters(parameters))
+    connection = pika.BlockingConnection(parameters)
     channel = connection.channel()
 
     # pass the queue name in environment variable
