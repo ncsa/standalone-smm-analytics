@@ -7,8 +7,6 @@ import requests
 import writeToS3 as s3
 
 RABBITMQ_HOST = os.getenv('RABBITMQ_HOST', 'rabbitmq')
-RABBITMQ_USER = os.getenv('RABBITMQ_HOST', 'guest')
-RABBITMQ_PASSWORD = os.getenv('RABBITMQ_HOST', 'guest')
 
 
 def get_config_json(config_url):
