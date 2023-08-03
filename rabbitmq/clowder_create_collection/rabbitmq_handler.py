@@ -6,6 +6,8 @@ import pika
 import requests
 
 RABBITMQ_HOST = os.getenv('RABBITMQ_HOST', 'rabbitmq')
+RABBITMQ_USER = os.getenv('RABBITMQ_HOST', 'guest')
+RABBITMQ_PASSWORD = os.getenv('RABBITMQ_HOST', 'guest')
 
 
 def rabbitmq_handler(ch, method, properties, body):
