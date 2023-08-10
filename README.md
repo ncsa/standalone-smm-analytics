@@ -17,6 +17,11 @@ It integrates with infrastructure components and configures itself automatically
 - following code block includes the set up for the local directory and this can be modified based on the convenience
 - many of them are optional, so some of them can be skipped based on the situation
 
+## Using Docker Compose (with traefik)
+- use the script [docker-compose-smile-traefik.sh](https://github.com/ncsa/standalone-smm-analytics/blob/main/rabbitmq/docker-command-smile-traefik.sh) 
+- or manually set the following environment variables then run docker-compose using the `docker-compose-smile-traefik.yml`
+- many of them are optional so some of them can be skipped based on the situation
+
 ### Optional environment variables
 - system setting 
   - DOCKERIZED=true 
@@ -45,7 +50,7 @@ It integrates with infrastructure components and configures itself automatically
   - TWITTER_V2_CLIENT_ID=<<twitter v2 client id>>
   - TWITTER_V2_CLIENT_SECRET=<<twitter v2 client secret>>
   - TWITTER_V2_CALLBACK_URL=<<twitter v2 callback url>>
-- export others 
+- others variables
   - BOX_CLIENT_ID=<box client id>
   - BOX_CLIENT_SECRET=<<box client secret>>
   - DROPBOX_CLIENT_ID=<<dropbox client id>>
@@ -53,12 +58,7 @@ It integrates with infrastructure components and configures itself automatically
   - GOOGLE_CLIENT_ID=<<google client id>>
   - GOOGLE_CLIENT_SECRET=<<google client secret>>
 - clowder related 
-  - export CLOWDER_BASE_URL=https://clowder.server.com/
-  - export CLOWDER_GLOBAL_KEY=<<clowder global key>>
-
-## Using Docker Compose (with traefik)
-- use the script [docker-compose-smile-traefik.sh](https://github.com/ncsa/standalone-smm-analytics/blob/main/rabbitmq/docker-command-smile-traefik.sh) 
-- or manually set the following environment variables then run docker-compose using the `docker-compose-smile-traefik.yml`
-- many of them are optional so some of them can be skipped based on the situation
-
+  - CLOWDER_BASE_URL=https://clowder.server.com/
+  - CLOWDER_GLOBAL_KEY=<<clowder global key>>
+  - CLOWDER_ON=false (this will decide if SMILE use clowder or not)
 Contact us the **[SRTI lab](https://srtilab.techservices.illinois.edu/about/)** if you have any question: <a href="mailto:srti-lab@illinois.edu">srti-lab@illinois.edu</a>
