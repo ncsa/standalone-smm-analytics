@@ -90,9 +90,9 @@ jobs:
         uses: elgohr/Publish-Docker-Github-Action@3.04
         with:
           dockerfile: ${{ matrix.dockerfile }}
-          name: ${{ matrix.hub_project }}
+          name: ${{ matrix.docker_location }}
           no_push: true
-          workdir: ${{ matrix.hub_project }}
+          workdir: ${{ matrix.docker_location }}
 
       - name: Publish docker image to Docker hub
         if: |
