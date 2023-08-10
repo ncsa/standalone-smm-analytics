@@ -3,7 +3,7 @@
 ## Social Media Macroscope Analytics Repository
 This repository hosts all the analytics and computation scripts for SMM tools. 
 
-## Version History of major SMM anlytics
+## Past Version History of major SMM analytics components
 - [AutoPhrase](./rabbitmq/autophrase/version.md)
 - [Classification Spit](./rabbitmq/classification_split/version.md)
 - [Classification Train](./rabbitmq/classification_train/version.md)
