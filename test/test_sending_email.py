@@ -9,14 +9,13 @@ def notification(toaddr,case,filename,links,sessionURL):
     # text content to send
     # subject
     host = os.environ.get('EMAIL_HOST')
-    port = os.environ.get('EMAIL_PORT')
+    port = os.environ.get('EMAIL_PORT', 25)
     fromaddr = os.environ.get('EMAIL_FROM_ADDRESS')
     password = os.environ.get('EMAIL_PASSWORD')
 
     if host is not None and host != "" and \
             port is not None and port != "" and\
-            fromaddr is not None and fromaddr != "" and \
-            password is not None and password != "":
+            fromaddr is not None and fromaddr != "":
         # map the fpath component to History panel names
         # local/NLP/sentiment/xxxxxxxxxxxxxxxxxxxxxxxx/ => [local,nlp,sentiment,xxxx,space]
         # [local, GraphQL, reddit-post, aww, space]
@@ -162,8 +161,10 @@ def notification(toaddr,case,filename,links,sessionURL):
         msg['To'] = toaddr
         msg.attach(MIMEText(html, 'html'))
 
-        server = smtplib.SMTP_SSL(host, port)
-        server.login(fromaddr, password)
+        server = smtplib.SMTP(host, int(port))
+        server.starttls()
+        if password is not None and password != "":
+            server.login(fromaddr, password)
         server.sendmail(fromaddr, toaddr, msg.as_string())
         server.quit()
     else:
@@ -173,7 +174,7 @@ def notification(toaddr,case,filename,links,sessionURL):
 if __name__ == '__main__':
     toaddr = "smm@lists.illinois.edu"
     case = 3
-    filename = "test_email_sending"
+    filename = "local/NLP/sentiment/xxxxxxxxxxxxxxxxxxxxxxxx/test_email_sending.txt"
     links = {
         "test": "https://smile.smm.illinois.edu",
         "test2": "https://smile.smm.illinois.edu"
