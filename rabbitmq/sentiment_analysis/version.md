@@ -11,3 +11,8 @@
 - Fix sentiment debias model by copying in the trained model numberbatch-en-17.04b.txt
 - Fix wordnet cannot zip issue in dockerfile
 
+### Version 0.1.2 (2023-05-01)
+- ?
+
+### Version 0.1.1 (2023-02-16)
+- Changed rabbitmq url to env variable
