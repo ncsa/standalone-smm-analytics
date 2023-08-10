@@ -33,15 +33,19 @@ jobs:
         include:
           - name: autophrase
             dockerfile: Dockerfile
+            work_dir: autophrase
             docker_location: socialmediamacroscope/autophrase
           - name: classification_predict
             dockerfile: Dockerfile
             docker_location: socialmediamacroscope/classification_predict
+            work_dir: classification_split
           - name: classification_split
             dockerfile: Dockerfile
             docker_location: socialmediamacroscope/classification_split
+            work_dir: classification_split
           - name: classification_train
             dockerfile: Dockerfile
+            work_dir: classification_train
             docker_location: socialmediamacroscope/classification_train
 
     steps:
@@ -92,7 +96,7 @@ jobs:
           dockerfile: ${{ matrix.dockerfile }}
           name: ${{ matrix.docker_location }}
           no_push: true
-          workdir: ${{ matrix.docker_location }}
+          workdir: ${{ matrix.work_dir }}
 
       - name: Publish docker image to Docker hub
         if: |
