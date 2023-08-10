@@ -37,12 +37,12 @@ jobs:
             docker_location: socialmediamacroscope/autophrase
           - name: classification_predict
             dockerfile: Dockerfile
-            docker_location: socialmediamacroscope/classification_predict
             work_dir: classification_split
+            docker_location: socialmediamacroscope/classification_predict
           - name: classification_split
             dockerfile: Dockerfile
-            docker_location: socialmediamacroscope/classification_split
             work_dir: classification_split
+            docker_location: socialmediamacroscope/classification_split
           - name: classification_train
             dockerfile: Dockerfile
             work_dir: classification_train
