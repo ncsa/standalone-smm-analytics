@@ -1,0 +1,14 @@
+# Version History
+
+
+### Version 0.1.4 (2023-08-10)
+- Update email function to allow flexible SMTP authentication options
+
+### Version 0.1.3 (2023-07-01)
+- Renamed Minio related environment variables
+
+### Version 0.1.2 (2023-07-01)
+- Renamed Minio related environment variables
+- 
+### Version 0.1.1 (2023-07-01)
+- Renamed Minio related environment variables
