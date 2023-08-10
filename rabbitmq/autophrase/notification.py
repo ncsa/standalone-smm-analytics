@@ -4,19 +4,18 @@ from email.mime.text import MIMEText
 import os
 
 
-def notification(toaddr,case,filename,links,sessionURL):
+def notification(toaddr, case, filename, links, sessionURL):
     # toaddr -- email address to send to
     # text content to send
     # subject
     host = os.environ.get('EMAIL_HOST')
-    port = os.environ.get('EMAIL_PORT')
+    port = os.environ.get('EMAIL_PORT', 25)
     fromaddr = os.environ.get('EMAIL_FROM_ADDRESS')
     password = os.environ.get('EMAIL_PASSWORD')
 
     if host is not None and host != "" and \
-            port is not None and port != "" and\
-            fromaddr is not None and fromaddr != "" and \
-            password is not None and password != "":
+            port is not None and port != "" and \
+            fromaddr is not None and fromaddr != "":
         # map the fpath component to History panel names
         # local/NLP/sentiment/xxxxxxxxxxxxxxxxxxxxxxxx/ => [local,nlp,sentiment,xxxx,space]
         # [local, GraphQL, reddit-post, aww, space]
@@ -76,7 +75,10 @@ def notification(toaddr,case,filename,links,sessionURL):
                                 <p>Dear user (session ID: """ + fpath[0] + """),</p>
                                 <p>Your Reddit Comment collection is exceeding 400 Megabyte, and is terminated due to lack of disk space.</p>
                                 <ul>
-                                    <li>You have requested comments and replies for the Reddit Submission (Post):<b>""" + fpath[3] + """</b>. The partial comments we manage to collect and save will be compressed for you in an .zip file named <a href='""" + links + """'>""" + fpath[3] + """-comments.zip</a> (click)</li>    
+                                    <li>You have requested comments and replies for the Reddit Submission (Post):<b>""" + \
+                   fpath[
+                       3] + """</b>. The partial comments we manage to collect and save will be compressed for you in an .zip file named <a href='""" + links + """'>""" + \
+                   fpath[3] + """-comments.zip</a> (click)</li>    
                                     <li>In order to download this file, you need to first locate the original submission in the <b>HISTORY</b> page in SMILE.
                                        <a href=""" + sessionURL + """>Go to your session...</a> 
                                     <ul>
@@ -103,12 +105,15 @@ def notification(toaddr,case,filename,links,sessionURL):
                                 <p>Dear user (session ID: """ + fpath[0] + """),</p>
                                 <p>Your Reddit Comment collection is ready for you!</p>
                                 <ul>
-                                    <li>You have requested comments and replies for the Reddit Submission (Post):<b>""" + fpath[3] + """</b>. It will be compressed for you in an .zip file named <a href='""" + links + """'>"""+ fpath[3] +"""-comments.zip</a></li>    
+                                    <li>You have requested comments and replies for the Reddit Submission (Post):<b>""" + \
+                   fpath[
+                       3] + """</b>. It will be compressed for you in an .zip file named <a href='""" + links + """'>""" + \
+                   fpath[3] + """-comments.zip</a></li>    
                                     <li>In order to download this file, you need to first locate the original submission in the <b>HISTORY</b> page in SMILE.
                                     <a href=""" + sessionURL + """>Go to your session...</a>
                                     <ul>
                                         <li>Go to <b>History</b></li> 
-                                        <li>--> under <b>""" + fpath[1] +"""</b></li> 
+                                        <li>--> under <b>""" + fpath[1] + """</b></li> 
                                         <li>--> click <b>""" + fpath[2] + """</b></li> 
                                         <li>--> then find <b>""" + fpath[3] + """</b></li>
                                         <li>--> click <b>VIEW</b></li> 
@@ -162,8 +167,10 @@ def notification(toaddr,case,filename,links,sessionURL):
         msg['To'] = toaddr
         msg.attach(MIMEText(html, 'html'))
 
-        server = smtplib.SMTP_SSL(host, port)
-        server.login(fromaddr, password)
+        server = smtplib.SMTP(host, int(port))
+        server.starttls()
+        if password is not None and password != "":
+            server.login(fromaddr, password)
         server.sendmail(fromaddr, toaddr, msg.as_string())
         server.quit()
     else:
