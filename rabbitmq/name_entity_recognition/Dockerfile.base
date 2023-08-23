@@ -4,4 +4,4 @@ RUN mkdir -p /scripts
 
 WORKDIR /scripts
 
-COPY models .
+COPY models models
