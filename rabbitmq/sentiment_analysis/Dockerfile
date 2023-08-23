@@ -1,5 +1,7 @@
 FROM socialmediamacroscope/sentiment_analysis:base
 
+RUN apt-get -qq -y update && apt-get -qq -y install cron
+
 WORKDIR /scripts
 
 COPY . ./
