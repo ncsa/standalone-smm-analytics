@@ -1,3 +1,5 @@
+# to build this image, there must be numberbatch-en-17.04b.txt file
+# at the same level as Dockerfile.base
 FROM python:3.8.5
 
 RUN mkdir -p /scripts
