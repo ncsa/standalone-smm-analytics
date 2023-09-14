@@ -1,6 +1,12 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) 
+# Social Media Macroscope Analytics
+Welcome to the Social Media Macroscope Analytics repository! 
+Here, you'll find the essential analytics components that power various projects within the Social Media Macroscope 
+ecosystem, such as the SMILE tool, BAE tool, and more. Our analytics suite is designed to provide powerful insights 
+and data-driven solutions for social media research and beyond.
 
-## Deploying SMILE
+## Get Started
+### Deploying SMILE
 SMILE can be deployed using docker-compose. 
 In this repository, there are two ways of deploying it, 
 one is using traefik, and the other is a conventional way using nginx.
@@ -9,23 +15,24 @@ load balancer that makes deploying microservices easy, and is designed to be
 as simple as possible to operate. 
 It integrates with infrastructure components and configures itself automatically and dynamically.
 
-## Using Docker Compose (no traefik)
-### Set up environment variables
-- use the script [docker-compose-smile.sh](./rabbitmq/docker-command-smile.sh)
-- or manually set following environment variables that start docker-compose with `docker-compose-smile.yml`
+### Using Docker Compose with Nginx (Deprecating soon)
+#### Set up environment variables
+- Use the script [docker-compose-smile.sh](./rabbitmq/docker-command-smile.sh)
+- Alternatively, manually set following environment variables that start docker-compose with `docker-compose-smile.yml`
   - environment variable information is in the script
-- following code block includes the set up for the local directory and this can be modified based on the convenience
-- many of them are optional, so some of them can be skipped based on the situation
+- Following code block includes the setups for the local directory and this can be modified based on the convenience
+- Note that some of the configuration variables are optional
 
-## Using Docker Compose (with traefik)
-- use the script [docker-compose-smile-traefik.sh](./rabbitmq/docker-command-smile-traefik.sh) 
-- or manually set the following environment variables then run docker-compose using the `docker-compose-smile-traefik.yml`
-- many of them are optional so some of them can be skipped based on the situation
+### Using Docker Compose with traefik (Recommended)
+- Use the script [docker-compose-smile-traefik.sh](./rabbitmq/docker-command-smile-traefik.sh) 
+- Alternatively, manually set the following environment variables then run docker-compose using the 
+  `docker-compose-smile-traefik.yml`
+- Note that some of the configuration variables are optional
 
-### Optional environment variables
+#### Optional environment variables
 - System setting. Set to true to use standalone containerized SMILE.
   - DOCKERIZED=true 
-- If use algorithm deployed on AWS, then you must use a static IP address.
+- If using algorithm deployed on AWS, then you must use a static IP address.
   - LOCAL_ALGORITHM=true
 - Single user mode vs multiple users mode.
   - SINGLE_USER=false 
@@ -61,7 +68,12 @@ It integrates with infrastructure components and configures itself automatically
   - CLOWDER_BASE_URL=<<clowder instance base url>>
   - CLOWDER_GLOBAL_KEY=<<clowder global key>>
   - CLOWDER_ON=false (enable connection to clowder or not)
-  
-For more information, visit [Social Media Macroscope](https://smm.ncsa.illinois.edu/).
 
-Contact us the if you have any questions: <a href="mailto:smm@lists.illinois.edu">smm@lists.illinois.edu</a>
+## Contributions
+We welcome contributions from the community to enhance and expand our analytics features. Whether you're an experienced
+data scientist or just starting in the field, your insights and contributions can help drive innovation in
+social media research.  
+
+## Contact Us
+- For more information, visit [Social Media Macroscope](https://smm.ncsa.illinois.edu/).
+- Contact us the if you have any questions: <a href="mailto:smm@lists.illinois.edu">smm@lists.illinois.edu</a>
