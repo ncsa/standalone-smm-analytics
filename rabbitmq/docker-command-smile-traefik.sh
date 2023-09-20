@@ -18,7 +18,7 @@ export CILOGON_CLIENT_ID=<<cilogon id>>
 export CILOGON_CLIENT_SECRET=<<cilogon client secret>>
 export CILOGON_CALLBACK_URL=<<ci logon callback url>>
 
-# if the minio-api.server doesn't work, it should ip address and port
+# if the minio-api.server doesn't work, it should be ip address and port
 # export MINIO_URL=http://xxx.xxx.xxx.xxx:9000
 # export MINIO_PUBLIC_ACCESS_URL=http://xxx.xxx.xxx.xxx:9000
 export MINIO_URL=https://minio-api.${SERVER}
