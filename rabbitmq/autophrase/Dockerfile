@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 # git clone autophrase algorithm
 RUN apt-get update \
@@ -8,8 +8,12 @@ RUN apt-get update \
 # overwrite
 WORKDIR /AutoPhrase
 COPY . ./
-
 ENV RABBITMQ_HOST="rabbitmq"
+
+# set environmet variables to prevent interactive prompt duing installation of openjdk
+ENV DEBIAN_FRONTEND=noninteractive
+ENV REGION=US
+ENV TZ=America/Chicago
 
 # install dependency libraries
 RUN apt-get -y update \
