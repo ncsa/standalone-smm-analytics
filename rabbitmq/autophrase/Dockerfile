@@ -1,9 +1,4 @@
-FROM ubuntu:20.04
-
-# git clone autophrase algorithm
-RUN apt-get update \
-&& apt-get -y install git && apt-get -y install cron \
-&& cd / && git clone https://github.com/IllinoisSocialMediaMacroscope/SMILE-AutoPhrase.git AutoPhrase
+FROM socialmediamacroscope/autophrase:base 
 
 # overwrite
 WORKDIR /AutoPhrase
