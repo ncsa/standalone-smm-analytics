@@ -2,6 +2,7 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import os
+import urllib.parse
 
 
 def reformat_sessionURL(sessionURL):
@@ -93,7 +94,8 @@ def notification(toaddr, case, filename, links, sessionURL):
                                 <ul>
                                     <li>You have requested comments and replies for the Reddit Submission (Post):<b>""" + \
                    fpath[
-                       3] + """</b>. The partial comments we manage to collect and save will be compressed for you in an .zip file named <a href='""" + links + """'>""" + \
+                       3] + """</b>. The partial comments we manage to collect and save will be compressed for you in an .zip file named <a href='""" + \
+                   urllib.parse.quote(links, safe="") + """'>""" + \
                    fpath[3] + """-comments.zip</a> (click)</li>    
                                     <li>In order to download this file, you need to first locate the original submission in the <b>Past Results</b> page in SMILE.
                                        <a href=""" + reformat_sessionURL(sessionURL) + """>Go to your session.</a> 
@@ -123,7 +125,7 @@ def notification(toaddr, case, filename, links, sessionURL):
                                 <ul>
                                     <li>You have requested comments and replies for the Reddit Submission (Post):<b>""" + \
                    fpath[
-                       3] + """</b>. It will be compressed for you in an .zip file named <a href='""" + links + """'>""" + \
+                       3] + """</b>. It will be compressed for you in an .zip file named <a href='""" + urllib.parse.quote(links, safe="") + """'>""" + \
                    fpath[3] + """-comments.zip</a></li>    
                                     <li>In order to download this file, you need to first locate the original submission in the <b>Past Results</b> page in SMILE.
                                     <a href=""" + reformat_sessionURL(sessionURL) + """>Go to your session.</a>
@@ -146,7 +148,7 @@ def notification(toaddr, case, filename, links, sessionURL):
         elif case == 3 or case == 'analytics-success':
             list_html = ''
             for key in links.keys():
-                list_html += '<li><a href="' + links[key] + '">' + key + '</a></li>'
+                list_html += '<li><a href="' + urllib.parse.quote(links[key], safe="") + '">' + key + '</a></li>'
 
             html = """<html> 
                         <head></head>
