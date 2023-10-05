@@ -21,6 +21,8 @@ export CILOGON_CALLBACK_URL=<<ci logon callback url>>
 export MINIO_URL=http://${SERVER}:9000/
 export MINIO_PUBLIC_ACCESS_URL=http://${SERVER}:9000/
 export BUCKET_NAME=macroscope-smile
+export SHARE_EXPIRE_IN=1
+
 export SMILE_GRAPHQL_URL=http://${SERVER}:5050/graphql
 
 # create mounted volumes on host machine
@@ -33,19 +35,21 @@ export RABBITMQ_HOST=${SERVER}
 export REDIS_URL=redis://redis:6379
 
 # email notification
-#export EMAIL_HOST=<<email host>>
-#export EMAIL_PORT=465
-#export EMAIL_FROM_ADDRESS=<<email from address>>
-#export EMAIL_PASSWORD=<<email password>>
+export EMAIL_HOST=<<email host>>
+export EMAIL_PORT=465
+export EMAIL_FROM_ADDRESS=<<email from address>>
+export EMAIL_PASSWORD=<<email password>>
 
 # align with AWS
 export AWS_ACCESSKEY=<<aws_accesskey>>
 export AWS_ACCESSKEYSECRET=<<aws_accesskeysecret>>
 
 # social media platforms
+export REDDIT_ON=true
 export REDDIT_CLIENT_ID=<<reddit client id>>
 export REDDIT_CLIENT_SECRET=<<reddit client secret>>
 export REDDIT_CALLBACK_URL=<<reddit callback url>>
+export TWITTER_ON=true
 #export TWITTER_CONSUMER_KEY=<<twitter consumer key>>
 #export TWITTER_CONSUMER_SECRET=<<twitter consumer secret>>
 export TWITTER_V2_CLIENT_ID=<<twitter v2 client id>>
