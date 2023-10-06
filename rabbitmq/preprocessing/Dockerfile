@@ -9,8 +9,11 @@ COPY . ./
 ENV RABBITMQ_HOST="rabbitmq"
 
 RUN pip install --no-cache-dir -r requirement.txt \
-&& python3 -m nltk.downloader -d /usr/local/share/nltk_data punkt stopwords averaged_perceptron_tagger \
+&& python3 -m nltk.downloader -d /usr/local/share/nltk_data punkt stopwords averaged_perceptron_tagger wordnet\
 # cron job clean tmp folder
 && chmod u+x ./clear_cache.sh \
 && chmod 0644 ./clear_cache_cron \
 && crontab ./clear_cache_cron
+
+# wordnet cannot unzip fix
+RUN unzip /usr/local/share/nltk_data/corpora/wordnet.zip -d /usr/local/share/nltk_data/corpora

@@ -16,3 +16,6 @@ RUN pip install --no-cache-dir -r requirement.txt \
 && chmod u+x ./clear_cache.sh \
 && chmod 0644 ./clear_cache_cron \
 && crontab ./clear_cache_cron
+
+# wordnet cannot unzip fix
+RUN unzip /usr/local/share/nltk_data/corpora/wordnet.zip -d /usr/local/share/nltk_data/corpora
