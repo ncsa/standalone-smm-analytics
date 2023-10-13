@@ -39,11 +39,13 @@ export RABBITMQ_HOST=${SERVER}
 export RABBITMQ_URL=amqp://${SERVER}
 export REDIS_URL=redis://redis
 
-# email notification
-export EMAIL_HOST=<<email host>>
-export EMAIL_PORT=465
-export EMAIL_FROM_ADDRESS=<<email from address>>
-# the password is not needed
+# the frontend will not ask the prompt window for asking the email
+# to send when some process is done and ready
+# if the following email related variables are setting
+# email notification prompt will show up if the following variables are set
+#export EMAIL_HOST=<<email host>>
+#export EMAIL_PORT=465
+#export EMAIL_FROM_ADDRESS=<<email from address>>
 #export EMAIL_PASSWORD=<<email password>>
 
 # align with AWS
