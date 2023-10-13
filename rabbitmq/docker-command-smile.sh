@@ -38,7 +38,8 @@ export REDIS_URL=redis://redis:6379
 export EMAIL_HOST=<<email host>>
 export EMAIL_PORT=465
 export EMAIL_FROM_ADDRESS=<<email from address>>
-export EMAIL_PASSWORD=<<email password>>
+# email password is not needed
+#export EMAIL_PASSWORD=<<email password>>
 
 # align with AWS
 export AWS_ACCESSKEY=<<aws_accesskey>>
