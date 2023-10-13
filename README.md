@@ -18,14 +18,14 @@ It integrates with infrastructure components and configures itself automatically
 
 ### Using Docker Compose with Nginx (Deprecating soon)
 #### Set up environment variables
-- Use the script [docker-compose-smile.sh](./rabbitmq/docker-command-smile.sh)
+- Use the script [docker-compose-smile.sh](containerized_analytics/smile/docker-command-smile.sh)
 - Alternatively, manually set following environment variables that start docker-compose with `docker-compose-smile.yml`
   - environment variable information is in the script
 - Following code block includes the setups for the local directory and this can be modified based on the convenience
 - Note that some of the configuration variables are optional
 
 ### Using Docker Compose with traefik (Recommended)
-- Use the script [docker-compose-smile-traefik.sh](./rabbitmq/docker-command-smile-traefik.sh) 
+- Use the script [docker-compose-smile-traefik.sh](containerized_analytics/smile/docker-command-smile-traefik.sh) 
 - Alternatively, manually set the following environment variables then run docker-compose using the 
   `docker-compose-smile-traefik.yml`
 - Note that some of the configuration variables are optional
@@ -71,15 +71,15 @@ It integrates with infrastructure components and configures itself automatically
   - CLOWDER_ON=false (enable connection to clowder or not)
 
 ## Past Version History of major SMM analytics components
-- [AutoPhrase](./rabbitmq/autophrase/version.md)
-- [Classification Spit](./rabbitmq/classification_split/version.md)
-- [Classification Train](./rabbitmq/classification_train/version.md)
-- [Classification Predict](./rabbitmq/classification_predict/version.md)
-- [Named Entity Recognition](./rabbitmq/name_entity_recognition/version.md)
-- [Network Analysis](./rabbitmq/network_analysis/version.md)
-- [Sentiment Analysis](./rabbitmq/sentiment_analysis/version.md)
-- [Topic Modeling](./rabbitmq/topic_modeling/version.md)
-- [Preprocessing](./rabbitmq/preprocessing/version.md)
+- [AutoPhrase](containerized_analytics/smile/autophrase/version.md)
+- [Classification Spit](containerized_analytics/smile/classification_split/version.md)
+- [Classification Train](containerized_analytics/smile/classification_train/version.md)
+- [Classification Predict](containerized_analytics/smile/classification_predict/version.md)
+- [Named Entity Recognition](containerized_analytics/smile/name_entity_recognition/version.md)
+- [Network Analysis](containerized_analytics/smile/network_analysis/version.md)
+- [Sentiment Analysis](containerized_analytics/smile/sentiment_analysis/version.md)
+- [Topic Modeling](containerized_analytics/smile/topic_modeling/version.md)
+- [Preprocessing](containerized_analytics/smile/preprocessing/version.md)
 
 ## Contributions
 We welcome contributions from the community to enhance and expand our analytics features. Whether you're an experienced

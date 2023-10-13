@@ -1,3 +1,0 @@
-# command to build and run this container
-docker build -t socialmediamacroscope/network_analysis:latest .
-docker push socialmediamacroscope/network_analysis:latest

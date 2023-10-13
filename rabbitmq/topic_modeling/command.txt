@@ -1,2 +1,0 @@
-docker build -t socialmediamacroscope/topic_modeling:latest .
-docker push socialmediamacroscope/topic_modeling:latest

@@ -1,3 +1,0 @@
-# command to build and run this container
-docker build -t check_screen_name:latest .
-docker run check_screen_name:latest

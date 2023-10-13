@@ -1,4 +1,0 @@
-SELECT ?itemLabel WHERE {
-  ?item wdt:P31 wd:Q2424752.
-  SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
-}
