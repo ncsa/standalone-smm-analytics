@@ -90,7 +90,7 @@ def notification(toaddr, case, filename, links, sessionURL):
         else:
             fpath = []
 
-        if len(fpath)==3:
+        if len(fpath) >= 3:
             if case == 0 or case == 'comment-fail':
                 html = f"""
                 <html> 
