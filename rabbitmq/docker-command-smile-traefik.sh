@@ -18,6 +18,9 @@ export CILOGON_CLIENT_ID=<<cilogon id>>
 export CILOGON_CLIENT_SECRET=<<cilogon client secret>>
 export CILOGON_CALLBACK_URL=<<ci logon callback url>>
 
+# setting for google analytics 4 key
+export GA_KEY=
+
 # if the minio-api.server doesn't work, it should be ip address and port
 # export MINIO_URL=http://xxx.xxx.xxx.xxx:9000
 # export MINIO_PUBLIC_ACCESS_URL=http://xxx.xxx.xxx.xxx:9000

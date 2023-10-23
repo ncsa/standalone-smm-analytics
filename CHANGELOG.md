@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Docker compose launch script [45](https://github.com/ncsa/standalone-smm-analytics/issues/45)
 - Docker compose file using traefik [46](https://github.com/ncsa/standalone-smm-analytics/issues/46)
 - Environment variables for turn on off twitter and reddit [73](https://github.com/ncsa/standalone-smm-analytics/issues/73)
-
+- Environment variable for Google Analytics 4 [81](https://github.com/ncsa/standalone-smm-analytics/issues/81)
 ### Changed
 - Hard coded rabbimq url changed to env variable [18](https://github.com/ncsa/standalone-smm-analytics/issues/18)
 - Modified S3 url to env variable [21](https://github.com/ncsa/standalone-smm-analytics/issues/21)
