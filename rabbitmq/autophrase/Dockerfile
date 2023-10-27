@@ -1,15 +1,14 @@
-FROM ubuntu:18.04
-
-# git clone autophrase algorithm
-RUN apt-get update \
-&& apt-get -y install git && apt-get -y install cron \
-&& cd / && git clone https://github.com/IllinoisSocialMediaMacroscope/SMILE-AutoPhrase.git AutoPhrase
+FROM socialmediamacroscope/autophrase:base 
 
 # overwrite
 WORKDIR /AutoPhrase
 COPY . ./
-
 ENV RABBITMQ_HOST="rabbitmq"
+
+# set environmet variables to prevent interactive prompt duing installation of openjdk
+ENV DEBIAN_FRONTEND=noninteractive
+ENV REGION=US
+ENV TZ=America/Chicago
 
 # install dependency libraries
 RUN apt-get -y update \
