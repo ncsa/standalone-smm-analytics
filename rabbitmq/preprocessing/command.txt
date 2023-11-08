@@ -1,3 +1,0 @@
-# command to build and run this container
-docker build -t socialmediamacroscope/preprocessing:latest .
-docker push socialmediamacroscope/preprocessing:latest

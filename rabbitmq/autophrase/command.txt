@@ -1,3 +1,0 @@
-docker build -t socialmediamacroscope/autophrase:latest .
-docker build -t socialmediamacroscope/autophrase_extractor:latest .
-docker push socialmediamacroscope/autophrase_extractor:latest
