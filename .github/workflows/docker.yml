@@ -111,7 +111,7 @@ jobs:
       if: github.repository == env.MAIN_REPO
       uses: elgohr/Publish-Docker-Github-Action@3.04
       with:
-        registry: hub.docker.com
+        registry: docker.io
         name: ${{ matrix.hub_project }}
         username: ${{ secrets.HUB_USERNAME }}
         password: ${{ secrets.HUB_PASSWORD }}
