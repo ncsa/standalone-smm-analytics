@@ -27,26 +27,11 @@ jobs:
       matrix:
         name:
           - autophrase
-          - classification_predict
-          - classification_split
-          - classification_train
         include:
           - name: autophrase
             dockerfile: Dockerfile
             work_dir: rabbitmq/autophrase
             docker_location: socialmediamacroscope/autophrase
-          - name: classification_predict
-            dockerfile: Dockerfile
-            work_dir: rabbitmq/classification_split
-            docker_location: socialmediamacroscope/classification_predict
-          - name: classification_split
-            dockerfile: Dockerfile
-            work_dir: rabbitmq/classification_split
-            docker_location: socialmediamacroscope/classification_split
-          - name: classification_train
-            dockerfile: Dockerfile
-            work_dir: rabbitmq/classification_train
-            docker_location: socialmediamacroscope/classification_train
 
     steps:
       - name: version information and set envs
