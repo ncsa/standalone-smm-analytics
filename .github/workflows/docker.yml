@@ -33,7 +33,7 @@ jobs:
         include:
           - name: autophrase
             dockerfile: Dockerfile
-            work_dir: containerized_analytics/smile/autophrase
+            work_dir: rabbitmq/autophrase
             docker_location: socialmediamacroscope/autophrase
           - name: classification_predict
             dockerfile: Dockerfile
