@@ -83,12 +83,10 @@ jobs:
         if: |
           github.repository == env.MAIN_REPO &&
           (github.event_name == 'pull_request' || env.GITHUB_BRANCH == 'develop' || env.GITHUB_BRANCH == 'main' || env.GITHUB_BRANCH == 'release')
-        uses: elgohr/Publish-Docker-Github-Action@3.04
-        with:
-          dockerfile: ./rabbitmq/autophrase/Dockerfile
-          context: ./rabbitmq/autophrase
-          name: ${{ matrix.docker_location }}
-          no_push: true
+        run: |
+          docker build -t ${{ matrix.docker_location }} ./rabbitmq/autophrase
+        env:
+          matrix.docker_location: socialmediamacroscope/autophrase
 
       - name: Publish docker image to Docker hub
         if: |
