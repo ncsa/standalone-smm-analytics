@@ -111,8 +111,6 @@ jobs:
           password: ${{ secrets.HUB_PASSWORD }}
           tags: "${{ env.TAGS }}"
 
-jobs:
-
   # ----------------------------------------------------------------------
   # DOCKER BUILD
   # ----------------------------------------------------------------------
@@ -152,6 +150,7 @@ jobs:
             echo "VERSION=testing" >> $GITHUB_ENV
             echo "TAGS=${BRANCH}" >> $GITHUB_ENV
           fi
+
       - name: Build docker image
         if: |
           github.repository == env.MAIN_REPO &&
