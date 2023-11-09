@@ -86,7 +86,7 @@ jobs:
         uses: elgohr/Publish-Docker-Github-Action@3.04
         with:
           dockerfile: rabbitmq/autophrase/Dockerfile
-          context: rabbitmq
+          context: ./rabbitmq/autophrase
           name: ${{ matrix.docker_location }}
           no_push: true
 
