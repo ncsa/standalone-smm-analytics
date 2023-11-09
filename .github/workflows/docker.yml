@@ -75,6 +75,10 @@ jobs:
       - name: Debug directory contents
         run: ls -R
 
+      - name: Print current working directory
+        run: pwd
+
+
       - name: Build docker image
         if: |
           github.repository == env.MAIN_REPO &&
