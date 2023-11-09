@@ -29,8 +29,7 @@ jobs:
           - autophrase
         include:
           - name: autophrase
-            dockerfile: rabbitmq/autophrase/Dockerfile
-            work_dir: standalone-smm-analytics/standalone-smm-analytics
+            dockerfile: Dockerfile.autophrase
             docker_location: socialmediamacroscope/autophrase
 
     steps:
@@ -78,15 +77,15 @@ jobs:
       - name: Print current working directory
         run: pwd
 
-
       - name: Build docker image
         if: |
           github.repository == env.MAIN_REPO &&
           (github.event_name == 'pull_request' || env.GITHUB_BRANCH == 'develop' || env.GITHUB_BRANCH == 'main' || env.GITHUB_BRANCH == 'release')
-        run: |
-          cd rabbitmq/autophrase
-          docker build -t socialmediamacroscope/autophrase .
-        working-directory: ${{ github.workspace }}
+        uses: elgohr/Publish-Docker-Github-Action@3.04
+        with:
+            dockerfile: ${{ matrix.dockerfile }}
+            name: ${{ matrix.hub_project }}
+            no_push: true
 
       - name: Publish docker image to Docker hub
         if: |
