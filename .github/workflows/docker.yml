@@ -73,8 +73,8 @@ jobs:
           echo "TAGS=${BRANCH}" >> $GITHUB_ENV
         fi
 
-    - name: Print DOC_TAGS
-      run: echo "Version tag value is: ${{ env.TAGS }}"
+    - name: Print Version tag
+      run: echo "${{ env.DOC_TAGS }}"
 
     - name: Build docker image
       uses: elgohr/Publish-Docker-Github-Action@3.04
