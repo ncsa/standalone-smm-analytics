@@ -27,11 +27,16 @@ jobs:
       matrix:
         name:
           - autophrase
+          - histogram
         include:
           - name: autophrase
             dockerfile: Dockerfile
             workdir: rabbitmq/autophrase
             hub_project: socialmediamacroscope/autophrase
+          - name: histogram
+            dockerfile: Dockerfile
+            workdir: rabbitmq/histogram
+            hub_project: socialmediamacroscope/histogram
     steps:
     # checkout source code
     - uses: actions/checkout@v2
@@ -58,31 +63,14 @@ jobs:
             OLDVERSION="${TMPVERSION}"
             TMPVERSION=$(echo ${OLDVERSION} | sed 's/\.[0-9]*$//')
           done
-          echo "DOC_VERSION=$VERSION" >> $GITHUB_ENV
-          echo "DOC_TAGS=${VERSIONS}" >> $GITHUB_ENV
-
-          # Swagger API Version
-          VERSION=$(cat restapi/data.json | grep \"version\" | head -1 | awk -F= "{ print $2 }" | sed 's/[version:,",]//g' | tr -d '[[:space:]]')
-          VERSIONS="latest"
-          OLDVERSION=""
-          TMPVERSION=$VERSION
-          while [ "$OLDVERSION" != "$TMPVERSION" ]; do
-            VERSIONS="${VERSIONS} ${TMPVERSION}"
-            OLDVERSION="${TMPVERSION}"
-            TMPVERSION=$(echo ${OLDVERSION} | sed 's/\.[0-9]*$//')
-          done
-          echo "API_VERSION=${VERSION}" >> $GITHUB_ENV
-          echo "API_TAGS=${VERSIONS}" >> $GITHUB_ENV
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "TAGS=${VERSIONS}" >> $GITHUB_ENV
         elif [ "$BRANCH" == "develop" ]; then
-          echo "DOC_VERSION=develop" >> $GITHUB_ENV
-          echo "API_VERSION=develop" >> $GITHUB_ENV
-          echo "DOC_TAGS=develop" >> $GITHUB_ENV
-          echo "API_TAGS=develop" >> $GITHUB_ENV
+          echo "VERSION=develop" >> $GITHUB_ENV
+          echo "TAGS=develop" >> $GITHUB_ENV
         else
-          echo "DOC_VERSION=testing" >> $GITHUB_ENV
-          echo "API_VERSION=testing" >> $GITHUB_ENV
-          echo "DOC_TAGS=${BRANCH}" >> $GITHUB_ENV
-          echo "API_TAGS=${BRANCH}" >> $GITHUB_ENV
+          echo "VERSION=testing" >> $GITHUB_ENV
+          echo "TAGS=${BRANCH}" >> $GITHUB_ENV
         fi
 
     - name: Build docker image
@@ -93,21 +81,10 @@ jobs:
         no_push: true
         workdir: ${{ matrix.workdir }}
 
-#    - name: Publish docker image to Docker hub
+    - name: Publish doc image to Docker Hub
 #      if: |
 #        github.repository == env.MAIN_REPO &&
 #        (github.event_name == env.GITHUB_BRANCH == 'main')
-#      uses: elgohr/Publish-Docker-Github-Action@3.04
-#      with:
-#        dockerfile: ${{ matrix.dockerfile }}
-#        registry: hub.docker.com
-#        name: ${{ matrix.hub_project }}
-#        username: ${{ secrets.HUB_USERNAME }}
-#        password: ${{ secrets.HUB_PASSWORD }}
-#        tags: "${{ env.TAGS }}"
-
-    - name: Publish doc image to Docker Hub
-      #if: github.event_name != 'pull_request' && github.repository == env.MAIN_REPO
       if: github.repository == env.MAIN_REPO
       uses: elgohr/Publish-Docker-Github-Action@3.04
       with:
@@ -115,5 +92,5 @@ jobs:
         name: ${{ matrix.hub_project }}
         username: ${{ secrets.HUB_USERNAME }}
         password: ${{ secrets.HUB_PASSWORD }}
-        tags: "${{ env.DOC_TAGS }}"
+        tags: "${{ env.TAGS }}"
         workdir: ${{ matrix.workdir }}
