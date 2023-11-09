@@ -77,6 +77,9 @@ jobs:
       run: echo "${{ env.TAGS }}"
 
     - name: Build docker image
+      if: |
+        github.repository == env.MAIN_REPO &&
+        (github.event_name == env.GITHUB_BRANCH == 'main')
       uses: elgohr/Publish-Docker-Github-Action@3.04
       with:
         dockerfile: ${{ matrix.dockerfile }}
@@ -85,10 +88,10 @@ jobs:
         workdir: ${{ matrix.workdir }}
 
     - name: Publish doc image to Docker Hub
-#      if: |
-#        github.repository == env.MAIN_REPO &&
-#        (github.event_name == env.GITHUB_BRANCH == 'main')
-      if: github.repository == env.MAIN_REPO
+      if: |
+        github.repository == env.MAIN_REPO &&
+        (github.event_name == env.GITHUB_BRANCH == 'main')
+#      if: github.repository == env.MAIN_REPO
       uses: elgohr/Publish-Docker-Github-Action@3.04
       with:
         registry: docker.io
