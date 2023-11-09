@@ -41,7 +41,7 @@ jobs:
     # checkout source code
     - uses: actions/checkout@v2
 
-   # calculate some variables that are used later
+    # calculate version information
     - name: version information
       run: |
         if [ "${{ github.event.release.target_commitish }}" != "" ]; then
@@ -72,6 +72,9 @@ jobs:
           echo "VERSION=testing" >> $GITHUB_ENV
           echo "TAGS=${BRANCH}" >> $GITHUB_ENV
         fi
+
+    - name: Print DOC_TAGS
+      run: echo "Version tag value is: ${{ env.TAGS }}"
 
     - name: Build docker image
       uses: elgohr/Publish-Docker-Github-Action@3.04
