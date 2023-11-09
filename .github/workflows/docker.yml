@@ -33,19 +33,19 @@ jobs:
         include:
           - name: autophrase
             dockerfile: Dockerfile
-            work_dir: rabbitmq/autophrase
+            work_dir: containerized_analytics/smile/autophrase
             docker_location: socialmediamacroscope/autophrase
           - name: classification_predict
             dockerfile: Dockerfile
-            work_dir: rabbitmq/classification_split
+            work_dir: containerized_analytics/smile/classification_split
             docker_location: socialmediamacroscope/classification_predict
           - name: classification_split
             dockerfile: Dockerfile
-            work_dir: rabbitmq/classification_split
+            work_dir: containerized_analytics/smile/classification_split
             docker_location: socialmediamacroscope/classification_split
           - name: classification_train
             dockerfile: Dockerfile
-            work_dir: rabbitmq/classification_train
+            work_dir: containerized_analytics/smile/classification_train
             docker_location: socialmediamacroscope/classification_train
 
     steps:
