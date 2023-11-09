@@ -93,18 +93,18 @@ jobs:
         no_push: true
         workdir: ${{ matrix.workdir }}
 
-    - name: Publish docker image to Docker hub
-      if: |
-        github.repository == env.MAIN_REPO &&
-        (github.event_name == env.GITHUB_BRANCH == 'main')
-      uses: elgohr/Publish-Docker-Github-Action@3.04
-      with:
-        dockerfile: ${{ matrix.dockerfile }}
-        registry: hub.docker.com
-        name: ${{ matrix.hub_project }}
-        username: ${{ secrets.HUB_USERNAME }}
-        password: ${{ secrets.HUB_PASSWORD }}
-        tags: "${{ env.TAGS }}"
+#    - name: Publish docker image to Docker hub
+#      if: |
+#        github.repository == env.MAIN_REPO &&
+#        (github.event_name == env.GITHUB_BRANCH == 'main')
+#      uses: elgohr/Publish-Docker-Github-Action@3.04
+#      with:
+#        dockerfile: ${{ matrix.dockerfile }}
+#        registry: hub.docker.com
+#        name: ${{ matrix.hub_project }}
+#        username: ${{ secrets.HUB_USERNAME }}
+#        password: ${{ secrets.HUB_PASSWORD }}
+#        tags: "${{ env.TAGS }}"
 
     - name: Publish doc image to Docker Hub
       #if: github.event_name != 'pull_request' && github.repository == env.MAIN_REPO
