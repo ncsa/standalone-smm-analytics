@@ -85,188 +85,35 @@ jobs:
           echo "API_TAGS=${BRANCH}" >> $GITHUB_ENV
         fi
 
-    # build image incore/doc/incore
-    - name: Build doc image
+    - name: Build docker image
       uses: elgohr/Publish-Docker-Github-Action@3.04
       with:
         dockerfile: ${{ matrix.dockerfile }}
         name: ${{ matrix.hub_project }}
         no_push: true
         workdir: ${{ matrix.workdir }}
-    # this will publish to NCSA image incore/doc/incore
-#    - name: Publish doc image to NCSA Hub
-#      #if: github.event_name != 'pull_request' && github.repository == env.MAIN_REPO
-#      if: github.repository == env.MAIN_REPO
-#      uses: elgohr/Publish-Docker-Github-Action@3.04
-#      with:
-#        registry: hub.ncsa.illinois.edu
-#        name: incore/doc/incore
-#        username: ${{ secrets.HUB_USERNAME }}
-#        password: ${{ secrets.HUB_PASSWORD }}
-#        tags: "${{ env.DOC_TAGS }}"
-#        workdir: manual_jb
 
-#name: Docker
-#
-## TODO: post an alert to incore-alerts slack channel when there is a failure on develop or main branches
-#
-#on:
-#  push:
-#    branches:
-#      - main
-##      - develop
-##      - 'release/*'
-#
-#  pull_request:
-#    branches:
-#      - main
-##      - develop
-##      - 'release/*'
-#
-#env:
-#  MAIN_REPO: ncsa/standalone-smm-analytics
-#
-#jobs:
-#  docker:
-#    runs-on: ubuntu-latest
-#    strategy:
-#      fail-fast: true
-#      matrix:
-#        name:
-#          - autophrase
-#        include:
-#          - name: autophrase
-#            dockerfile: Dockerfile.autophrase
-#            docker_location: socialmediamacroscope/autophrase
-#
-#    steps:
-#      - name: version information and set envs
-#        run: |
-#          if [ "${{ github.event.release.target_commitish }}" != "" ]; then
-#            BRANCH="${{ github.event.release.target_commitish }}"
-#          elif [[ "${{github.event_name}}" == "pull_request" ]]; then
-#            BRANCH="PR-${{github.event.pull_request.number}}"
-#          else
-#            if [[ $GITHUB_REF =~ "release/" ]]; then
-#              BRANCH="release"
-#            else
-#              BRANCH=${GITHUB_REF##*/}
-#            fi
-#          fi
-#
-#          echo "GITHUB_BRANCH=${BRANCH}" >> $GITHUB_ENV
-#          version=$(cat ./server/build.gradle | grep "archiveVersion" | head -1 | awk -F= "{ print $2 }" | sed "s/[archiveVersion =,',]//g")
-#          if [ "$BRANCH" == "main" ]; then
-#            tags="latest"
-#            oldversion=""
-#            while [ "${oldversion}" != "${version}" ]; do
-#              oldversion="${version}"
-#              tags="${tags},${version}"
-#              version=${version%.*}
-#            done
-#            echo "VERSION=${version}" >> $GITHUB_ENV
-#            echo "TAGS=${tags}" >> $GITHUB_ENV
-#          elif [ "$BRANCH" == "release" ]; then
-#            echo "VERSION=${version}-rc" >> $GITHUB_ENV
-#            echo "TAGS=${version}-rc" >> $GITHUB_ENV
-#          elif [ "$BRANCH" == "develop" ]; then
-#            echo "VERSION=develop" >> $GITHUB_ENV
-#            echo "TAGS=develop" >> $GITHUB_ENV
-#          else
-#            echo "VERSION=testing" >> $GITHUB_ENV
-#            STRIPPED_TAGS=${BRANCH/\#/_}
-#            echo "TAGS=${STRIPPED_TAGS}" >> $GITHUB_ENV
-#          fi
-#
-#      - name: Debug directory contents
-#        run: ls -R
-#
-#      - name: Print current working directory
-#        run: pwd
-#
-#      - name: Build docker image
-#        if: |
-#          github.repository == env.MAIN_REPO &&
-#          (github.event_name == 'pull_request' || env.GITHUB_BRANCH == 'develop' || env.GITHUB_BRANCH == 'main' || env.GITHUB_BRANCH == 'release')
-#        uses: elgohr/Publish-Docker-Github-Action@3.04
-#        with:
-#          dockerfile: ${{ matrix.dockerfile }}
-#          name: ${{ matrix.hub_project }}
-#          no_push: true
-#
-#      - name: Publish docker image to Docker hub
-#        if: |
-#          github.repository == env.MAIN_REPO &&
-#          (github.event_name == env.GITHUB_BRANCH == 'main')
-#        uses: elgohr/Publish-Docker-Github-Action@3.04
-#        with:
-#          dockerfile: ${{ matrix.dockerfile }}
-#          registry: hub.docker.com
-#          name: ${{ matrix.docker_location }}
-#          username: ${{ secrets.HUB_USERNAME }}
-#          password: ${{ secrets.HUB_PASSWORD }}
-#          tags: "${{ env.TAGS }}"
-#
-#  # ----------------------------------------------------------------------
-#  # DOCKER BUILD
-#  # ----------------------------------------------------------------------
-#  docker:
-#    runs-on: ubuntu-latest
-#
-#    steps:
-#      # checkout source code
-#      - uses: actions/checkout@v2
-#
-#      # calculate some variables that are used later
-#      - name: version information
-#        run: |
-#          if [ "${{ github.event.release.target_commitish }}" != "" ]; then
-#            BRANCH="${{ github.event.release.target_commitish }}"
-#          elif [[ $GITHUB_REF =~ pull ]]; then
-#            BRANCH="$(echo $GITHUB_REF | sed 's#refs/pull/\([0-9]*\)/merge#PR-\1#')"
-#          else
-#            BRANCH=${GITHUB_REF##*/}
-#          fi
-#          echo "GITHUB_BRANCH=${BRANCH}" >> $GITHUB_ENV
-#          if [ "$BRANCH" == "main" ]; then
-#            version=$(cat package.json | grep \"version\" | head -1 | awk -F= "{ print $2 }" | sed 's/[version:,",]//g' | tr -d '[[:space:]]')
-#            tags="latest"
-#            oldversion=""
-#            while [ "${oldversion}" != "${version}" ]; do
-#              oldversion="${version}"
-#              tags="${tags},${version}"
-#              version=${version%.*}
-#            done
-#            echo "VERSION=${version}" >> $GITHUB_ENV
-#            echo "TAGS=${tags}" >> $GITHUB_ENV
-#          elif [ "$BRANCH" == "develop" ]; then
-#            echo "VERSION=develop" >> $GITHUB_ENV
-#            echo "TAGS=develop" >> $GITHUB_ENV
-#          else
-#            echo "VERSION=testing" >> $GITHUB_ENV
-#            echo "TAGS=${BRANCH}" >> $GITHUB_ENV
-#          fi
-#
-#      - name: Build docker image
-#        if: |
-#          github.repository == env.MAIN_REPO &&
-##          (github.event_name == 'pull_request' || env.GITHUB_BRANCH == 'develop' || env.GITHUB_BRANCH == 'main' || env.GITHUB_BRANCH == 'release')
-#          (github.event_name == 'env.GITHUB_BRANCH == 'pull_request')
-#        uses: elgohr/Publish-Docker-Github-Action@3.04
-#        with:
-#          dockerfile: ${{ matrix.dockerfile }}
-#          name: ${{ matrix.hub_project }}
-#          no_push: true
-#
-##      - name: Publish docker image to NCSA hub
-##        if: |
-##          github.repository == env.MAIN_REPO &&
-##          (github.event_name == 'pull_request' || env.GITHUB_BRANCH == 'develop' || env.GITHUB_BRANCH == 'main'|| env.GITHUB_BRANCH == 'release')
-##        uses: elgohr/Publish-Docker-Github-Action@3.04
-##        with:
-##          dockerfile: ${{ matrix.dockerfile }}
-##          registry: hub.ncsa.illinois.edu
-##          name: ${{ matrix.hub_project }}
-##          username: ${{ secrets.HUB_USERNAME }}
-##          password: ${{ secrets.HUB_PASSWORD }}
-##          tags: "${{ env.TAGS }}"
+    - name: Publish docker image to Docker hub
+      if: |
+        github.repository == env.MAIN_REPO &&
+        (github.event_name == env.GITHUB_BRANCH == 'main')
+      uses: elgohr/Publish-Docker-Github-Action@3.04
+      with:
+        dockerfile: ${{ matrix.dockerfile }}
+        registry: hub.docker.com
+        name: ${{ matrix.hub_project }}
+        username: ${{ secrets.HUB_USERNAME }}
+        password: ${{ secrets.HUB_PASSWORD }}
+        tags: "${{ env.TAGS }}"
+
+    - name: Publish doc image to Docker Hub
+      #if: github.event_name != 'pull_request' && github.repository == env.MAIN_REPO
+      if: github.repository == env.MAIN_REPO
+      uses: elgohr/Publish-Docker-Github-Action@3.04
+      with:
+        registry: hub.docker.com
+        name: ${{ matrix.hub_project }}
+        username: ${{ secrets.HUB_USERNAME }}
+        password: ${{ secrets.HUB_PASSWORD }}
+        tags: "${{ env.DOC_TAGS }}"
+        workdir: ${{ matrix.workdir }}
