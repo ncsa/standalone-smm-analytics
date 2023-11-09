@@ -81,7 +81,7 @@ jobs:
           dockerfile: ${{ matrix.dockerfile }}
           name: ${{ matrix.docker_location }}
           no_push: true
-          workdir: ${{ matrix.work_dir }}
+          # workdir: ${{ matrix.work_dir }}
 
       - name: Publish docker image to Docker hub
         if: |
