@@ -86,9 +86,9 @@ jobs:
         uses: elgohr/Publish-Docker-Github-Action@3.04
         with:
           dockerfile: rabbitmq/autophrase/Dockerfile
+          context: rabbitmq
           name: ${{ matrix.docker_location }}
           no_push: true
-          #workdir: rabbitmq/autophrase
 
       - name: Publish docker image to Docker hub
         if: |
