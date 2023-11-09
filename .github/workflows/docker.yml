@@ -85,7 +85,7 @@ jobs:
           (github.event_name == 'pull_request' || env.GITHUB_BRANCH == 'develop' || env.GITHUB_BRANCH == 'main' || env.GITHUB_BRANCH == 'release')
         uses: elgohr/Publish-Docker-Github-Action@3.04
         with:
-          dockerfile: rabbitmq/autophrase/Dockerfile
+          dockerfile: ./rabbitmq/autophrase/Dockerfile
           context: ./rabbitmq/autophrase
           name: ${{ matrix.docker_location }}
           no_push: true
