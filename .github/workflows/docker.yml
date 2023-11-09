@@ -72,6 +72,9 @@ jobs:
             echo "TAGS=${STRIPPED_TAGS}" >> $GITHUB_ENV
           fi
 
+      - name: Debug directory contents
+        run: ls -R
+
       - name: Build docker image
         if: |
           github.repository == env.MAIN_REPO &&
