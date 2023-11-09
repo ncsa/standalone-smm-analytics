@@ -84,9 +84,9 @@ jobs:
           github.repository == env.MAIN_REPO &&
           (github.event_name == 'pull_request' || env.GITHUB_BRANCH == 'develop' || env.GITHUB_BRANCH == 'main' || env.GITHUB_BRANCH == 'release')
         run: |
-          docker build -t ${{ matrix.docker_location }} ./rabbitmq/autophrase
-        env:
-          matrix.docker_location: socialmediamacroscope/autophrase
+          cd rabbitmq/autophrase
+          docker build -t socialmediamacroscope/autophrase .
+        working-directory: ${{ github.workspace }}
 
       - name: Publish docker image to Docker hub
         if: |
