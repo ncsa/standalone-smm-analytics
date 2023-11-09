@@ -29,8 +29,8 @@ jobs:
           - autophrase
         include:
           - name: autophrase
-            dockerfile: Dockerfile
-            work_dir: standalone-smm-analytics/standalone-smm-analytics/rabbitmq/autophrase
+            dockerfile: rabbitmq/autophrase/Dockerfile
+            work_dir: standalone-smm-analytics/standalone-smm-analytics
             docker_location: socialmediamacroscope/autophrase
 
     steps:
