@@ -37,15 +37,15 @@ jobs:
             docker_location: socialmediamacroscope/autophrase
           - name: classification_predict
             dockerfile: Dockerfile
-            work_dir: containerized_analytics/smile/classification_split
+            work_dir: rabbitmq/classification_split
             docker_location: socialmediamacroscope/classification_predict
           - name: classification_split
             dockerfile: Dockerfile
-            work_dir: containerized_analytics/smile/classification_split
+            work_dir: rabbitmq/classification_split
             docker_location: socialmediamacroscope/classification_split
           - name: classification_train
             dockerfile: Dockerfile
-            work_dir: containerized_analytics/smile/classification_train
+            work_dir: rabbitmq/classification_train
             docker_location: socialmediamacroscope/classification_train
 
     steps:
