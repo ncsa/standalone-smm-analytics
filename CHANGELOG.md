@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+- Reorganized repository structure [#10](https://github.com/ncsa/standalone-smm-analytics/issues/10)
+
 ## [Beta] - 10-26-2023
 
 ### Added
@@ -23,4 +28,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Created base image for sentiment analysis with model [#55](https://github.com/ncsa/standalone-smm-analytics/issues/55)
 - Created base image for name entity recognition with model [#56](https://github.com/ncsa/standalone-smm-analytics/issues/56)
 - Docker compose file updated to fix minio default bucket making [#63](https://github.com/ncsa/standalone-smm-analytics/issues/63)
-- Reorganized repository structure [#10](https://github.com/ncsa/standalone-smm-analytics/issues/10)
