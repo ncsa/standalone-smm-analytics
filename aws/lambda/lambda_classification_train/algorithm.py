@@ -25,6 +25,6 @@ def algorithm(array, params):
 
     # plot
     output['div_accuracy'] = plot.plot_bar_chart(fold_scores[0], fold_scores[1],
-                                        title='10 fold cross validation accuracy score')
+                                                 title='10 fold cross validation accuracy score')
 
     return output

@@ -89,7 +89,7 @@ def related_queries(keywords, language, localPath):
         for keyword in keywords_split:
             if indices[keyword] != [] and counts[keyword] != [] and title[keyword] != [] and subtitles[keyword] != []:
                 div = plot.plot_multiple_bar_chart(indices[keyword], counts[keyword], title[keyword],
-                                                      subtitles[keyword])
+                                                   subtitles[keyword])
                 with open(os.path.join(localPath, keyword.replace(" ", "_") + "_related_queries.html"), 'w') as f:
                     f.write(div)
                 s3.upload("macroscope-paho-covid", localPath, "related_queries",
