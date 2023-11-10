@@ -1,0 +1,2 @@
+docker build -t socialmediamacroscope/name_entity_recognition:latest .
+docker push socialmediamacroscope/name_entity_recognition:latest
