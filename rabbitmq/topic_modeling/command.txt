@@ -1,3 +1,0 @@
-docker build -t socialmediamacroscope/topic_modeling:latest .
-docker build -f extractor.dockerfile -t socialmediamacroscope/topic_modeling_extractor:latest .
-docker push socialmediamacroscope/topic_modeling_extractor:latest
