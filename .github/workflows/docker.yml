@@ -31,11 +31,11 @@ jobs:
         include:
           - name: autophrase
             dockerfile: Dockerfile
-            workdir: rabbitmq/autophrase
+            workdir: containerized_analytics/smile/autophrase
             hub_project: socialmediamacroscope/autophrase
           - name: histogram
             dockerfile: Dockerfile
-            workdir: rabbitmq/histogram
+            workdir: containerized_analytics/smile/histogram
             hub_project: socialmediamacroscope/histogram
     steps:
     # checkout source code
@@ -98,5 +98,19 @@ jobs:
         name: ${{ matrix.hub_project }}
         username: ${{ secrets.HUB_USERNAME }}
         password: ${{ secrets.HUB_PASSWORD }}
+        tags: "${{ env.TAGS }}"
+        workdir: ${{ matrix.workdir }}
+
+    - name: Publish doc image to Github
+#      if: |
+#        github.repository == env.MAIN_REPO &&
+#        (github.event_name == env.GITHUB_BRANCH == 'develop')
+      if: github.repository == env.MAIN_REPO
+      uses: elgohr/Publish-Docker-Github-Action@3.04
+      with:
+        registry: ghcr.io
+        name: ${{ matrix.hub_project }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
         tags: "${{ env.TAGS }}"
         workdir: ${{ matrix.workdir }}
