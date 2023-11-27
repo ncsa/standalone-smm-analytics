@@ -88,7 +88,6 @@ services:
       - minio
     command: python ./rabbitmq_handler.py
     environment:
-      #- MINIO_URL=${MINIO_URL}
       - MINIO_PUBLIC_ACCESS_URL=${MINIO_PUBLIC_ACCESS_URL}
       - RABBITMQ_HOST=${RABBITMQ_HOST}
       - AWS_ACCESSKEY=${AWS_ACCESSKEY}
@@ -104,7 +103,6 @@ services:
       - minio
     command: python ./rabbitmq_handler.py
     environment:
-      #- MINIO_URL=${MINIO_URL}
       - MINIO_PUBLIC_ACCESS_URL=${MINIO_PUBLIC_ACCESS_URL}
       - RABBITMQ_HOST=${RABBITMQ_HOST}
       - AWS_ACCESSKEY=${AWS_ACCESSKEY}
@@ -120,7 +118,6 @@ services:
       - minio
     command: python ./rabbitmq_handler.py
     environment:
-      #- MINIO_URL=${MINIO_URL}
       - MINIO_PUBLIC_ACCESS_URL=${MINIO_PUBLIC_ACCESS_URL}
       - RABBITMQ_HOST=${RABBITMQ_HOST}
       - AWS_ACCESSKEY=${AWS_ACCESSKEY}
@@ -136,7 +133,6 @@ services:
       - minio
     command: python ./rabbitmq_handler.py
     environment:
-      - MINIO_URL=${MINIO_URL}
       - MINIO_PUBLIC_ACCESS_URL=${MINIO_PUBLIC_ACCESS_URL}
       - RABBITMQ_HOST=${RABBITMQ_HOST}
       - AWS_ACCESSKEY=${AWS_ACCESSKEY}
@@ -152,7 +148,6 @@ services:
       - minio
     command: python ./rabbitmq_handler.py
     environment:
-      #- MINIO_URL=${MINIO_URL}
       - MINIO_PUBLIC_ACCESS_URL=${MINIO_PUBLIC_ACCESS_URL}
       - RABBITMQ_HOST=${RABBITMQ_HOST}
       - AWS_ACCESSKEY=${AWS_ACCESSKEY}
@@ -172,7 +167,6 @@ services:
       - minio
     command: python ./rabbitmq_handler.py
     environment:
-      #- MINIO_URL=${MINIO_URL}
       - MINIO_PUBLIC_ACCESS_URL=${MINIO_PUBLIC_ACCESS_URL}
       - RABBITMQ_HOST=${RABBITMQ_HOST}
       - AWS_ACCESSKEY=${AWS_ACCESSKEY}
@@ -192,7 +186,6 @@ services:
       - minio
     command: python ./rabbitmq_handler.py
     environment:
-      - MINIO_URL=${MINIO_URL}
       - MINIO_PUBLIC_ACCESS_URL=${MINIO_PUBLIC_ACCESS_URL}
       - RABBITMQ_HOST=${RABBITMQ_HOST}
       - AWS_ACCESSKEY=${AWS_ACCESSKEY}
@@ -212,7 +205,6 @@ services:
       - minio
     command: python ./screen_name_prompt.py
     environment:
-      #- MINIO_URL=${MINIO_URL}
       - MINIO_PUBLIC_ACCESS_URL=${MINIO_PUBLIC_ACCESS_URL}
       - RABBITMQ_HOST=${RABBITMQ_HOST}
       - AWS_ACCESSKEY=${AWS_ACCESSKEY}
@@ -228,7 +220,6 @@ services:
       - minio
     command: python ./rabbitmq_handler.py
     environment:
-      #- MINIO_URL=${MINIO_URL}
       - MINIO_PUBLIC_ACCESS_URL=${MINIO_PUBLIC_ACCESS_URL}
       - RABBITMQ_HOST=${RABBITMQ_HOST}
       - AWS_ACCESSKEY=${AWS_ACCESSKEY}
@@ -248,7 +239,6 @@ services:
       - minio
     command: python3 ./rabbitmq_handler.py
     environment:
-      #- MINIO_URL=${MINIO_URL}
       - MINIO_PUBLIC_ACCESS_URL=${MINIO_PUBLIC_ACCESS_URL}
       - RABBITMQ_HOST=${RABBITMQ_HOST}
       - AWS_ACCESSKEY=${AWS_ACCESSKEY}
@@ -268,7 +258,6 @@ services:
       - minio
     command: python3 ./rabbitmq_handler.py
     environment:
-      #- MINIO_URL=${MINIO_URL}
       - MINIO_PUBLIC_ACCESS_URL=${MINIO_PUBLIC_ACCESS_URL}
       - RABBITMQ_HOST=${RABBITMQ_HOST}
       - AWS_ACCESSKEY=${AWS_ACCESSKEY}
@@ -288,7 +277,6 @@ services:
       - minio
     command: python3 ./rabbitmq_handler.py
     environment:
-      #- MINIO_URL=${MINIO_URL}
       - MINIO_PUBLIC_ACCESS_URL=${MINIO_PUBLIC_ACCESS_URL}
       - RABBITMQ_HOST=${RABBITMQ_HOST}
       - AWS_ACCESSKEY=${AWS_ACCESSKEY}
@@ -308,7 +296,6 @@ services:
       - minio
     command: python3 ./rabbitmq_handler.py
     environment:
-      #- MINIO_URL=${MINIO_URL}
       - MINIO_PUBLIC_ACCESS_URL=${MINIO_PUBLIC_ACCESS_URL}
       - RABBITMQ_HOST=${RABBITMQ_HOST}
       - REDDIT_CLIENT_ID=${REDDIT_CLIENT_ID}
@@ -338,7 +325,7 @@ services:
       - LOCAL_ALGORITHM=${LOCAL_ALGORITHM}
       - GA_KEY=${GA_KEY}
       - MINIO_URL=${MINIO_URL}
-      - MINIO_PUBLIC_ACCESS_URL=${MINIO_URL}
+      - MINIO_PUBLIC_ACCESS_URL=${MINIO_PUBLIC_ACCESS_URL}
       - REDIS_URL=${REDIS_URL}
       - SMILE_GRAPHQL_URL=${SMILE_GRAPHQL_URL}
       - RABBITMQ_URL=${RABBITMQ_URL}
@@ -407,7 +394,6 @@ services:
       - AWS_ACCESSKEYSECRET=${AWS_ACCESSKEYSECRET}
       - BUCKET_NAME=${BUCKET_NAME}
       - CLOWDER_BASE_URL=${CLOWDER_BASE_URL}
-      - HOST_IP=${HOST_IP}
       - MINIO_PUBLIC_ACCESS_URL=${MINIO_PUBLIC_ACCESS_URL}
       - MINIO_URL=${MINIO_URL}
       - QUEUE_NAME=lambda_upload_clowder
@@ -423,7 +409,6 @@ services:
     environment:
       - CLOWDER_BASE_URL=${CLOWDER_BASE_URL}
       - CLOWDER_GLOBAL_KEY=${CLOWDER_GLOBAL_KEY}
-      - HOST_IP=${HOST_IP}
       - QUEUE_NAME=lambda_list_clowder
       - RABBITMQ_HOST=${RABBITMQ_HOST}
     restart: unless-stopped
@@ -436,7 +421,6 @@ services:
     command: python ./rabbitmq_handler.py
     environment:
       - CLOWDER_BASE_URL=${CLOWDER_BASE_URL}
-      - HOST_IP=${HOST_IP}
       - QUEUE_NAME=clowder_create_space
       - RABBITMQ_HOST=${RABBITMQ_HOST}
     restart: unless-stopped
@@ -449,7 +433,6 @@ services:
     command: python ./rabbitmq_handler.py
     environment:
       - CLOWDER_BASE_URL=${CLOWDER_BASE_URL}
-      - HOST_IP=${HOST_IP}
       - QUEUE_NAME=lambda_invoke_clowder
       - RABBITMQ_HOST=${RABBITMQ_HOST}
     restart: unless-stopped
@@ -462,7 +445,6 @@ services:
     command: python ./rabbitmq_handler.py
     environment:
       - CLOWDER_BASE_URL=${CLOWDER_BASE_URL}
-      - HOST_IP=${HOST_IP}
       - QUEUE_NAME=clowder_create_collection
       - RABBITMQ_HOST=${RABBITMQ_HOST}
     restart: unless-stopped
