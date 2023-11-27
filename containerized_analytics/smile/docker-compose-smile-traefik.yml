@@ -341,11 +341,6 @@ services:
       - algorithm-name-entity-recognition
       - algorithm-topic-modeling
       - algorithm-screen-name-prompt
-#      - clowder-create-collection
-#      - clowder-create-dataset
-#      - clowder-create-space
-#      - clowder-list
-#      - clowder-upload-file
     command: npm run docker-start
     environment:
       - HOME=${HOME}
