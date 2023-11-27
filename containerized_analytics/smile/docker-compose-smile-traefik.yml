@@ -330,17 +330,7 @@ services:
       - rabbitmq
       - minio
       - redis
-      - algorithm-classification-predict
-      - algorithm-classification-split
-      - algorithm-classification-train
-      - algorithm-histogram
-      - algorithm-network-analysis
-      - algorithm-preprocessing
-      - algorithm-sentiment-analysis
-      - algorithm-autophrase
-      - algorithm-name-entity-recognition
-      - algorithm-topic-modeling
-      - algorithm-screen-name-prompt
+      - smile-graphql
     command: npm run docker-start
     environment:
       - HOME=${HOME}
@@ -392,8 +382,6 @@ services:
   smile-graphql:
     image: socialmediamacroscope/smile_graphql:twitter-v2
     container_name: graphql
-    depends_on:
-      - smile-server
     command: npm run docker-start
     environment:
       - DOCKERIZED=${DOCKERIZED}
