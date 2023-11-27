@@ -9,16 +9,17 @@ services:
 
   minio:
     image: minio/minio
+    container_name: minio
     hostname: minio
     ports:
       - 9000:9000
       - 9001:9001
     volumes:
-      - "smile_content_data:/tmp"
-    command: server /tmp
+      - "smile_content_data:/data"
     environment:
-      - MINIO_ACCESS_KEY=${AWS_ACCESSKEY}
-      - MINIO_SECRET_KEY=${AWS_ACCESSKEYSECRET}
+      - MINIO_ROOT_USER=${AWS_ACCESSKEY}
+      - MINIO_ROOT_PASSWORD=${AWS_ACCESSKEYSECRET}
+    command: server /data --console-address ":9001"
     restart: unless-stopped
 
   redis:
@@ -297,57 +298,49 @@ services:
       - rabbitmq
       - minio
       - redis
-      - algorithm-classification-predict
-      - algorithm-classification-split
-      - algorithm-classification-train
-      - algorithm-histogram
-      - algorithm-network-analysis
-      - algorithm-preprocessing
-      - algorithm-sentiment-analysis
-      - algorithm-autophrase
-      - algorithm-name-entity-recognition
-      - algorithm-topic-modeling
-      - algorithm-screen-name-prompt
-        #- clowder-create-collection
-        #- clowder-create-dataset
-        #- clowder-create-space
-        #- clowder-list
-        #- clowder-upload-file
+      - smile-graphql
     ports:
     - 8001:8001
     command: npm run docker-start
     environment:
-    - HOME=${HOME}
-    - DOCKERIZED=${DOCKERIZED}
-    - LOCAL_ALGORITHM=${LOCAL_ALGORITHM}
-    - GA_KEY=${GA_KEY}
-    - MINIO_URL=${MINIO_URL}
-    - MINIO_PUBLIC_ACCESS_URL=${MINIO_PUBLIC_ACCESS_URL}
-    - REDIS_URL=${REDIS_URL}
-    - SMILE_GRAPHQL_URL=${SMILE_GRAPHQL_URL}
-    - RABBITMQ_URL=${RABBITMQ_URL}
-    - BUCKET_NAME=${BUCKET_NAME}
-    - AWS_ACCESSKEY=${AWS_ACCESSKEY}
-    - AWS_ACCESSKEYSECRET=${AWS_ACCESSKEYSECRET}
-    - TWITTER_CONSUMER_KEY=${TWITTER_CONSUMER_KEY}
-    - TWITTER_CONSUMER_SECRET=${TWITTER_CONSUMER_SECRET}
-    - REDDIT_CLIENT_ID=${REDDIT_CLIENT_ID}
-    - REDDIT_CLIENT_SECRET=${REDDIT_CLIENT_SECRET}
-    - REDDIT_CALLBACK_URL=${REDDIT_CALLBACK_URL}
-    - BOX_CLIENT_ID=${BOX_CLIENT_ID}
-    - BOX_CLIENT_SECRET=${BOX_CLIENT_SECRET}
-    - DROPBOX_CLIENT_ID=${DROPBOX_CLIENT_ID}
-    - DROPBOX_CLIENT_SECRET=${DROPBOX_CLIENT_SECRET}
-    - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
-    - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
-    - EMAIL_HOST=${EMAIL_HOST}
-    - EMAIL_PORT=${EMAIL_PORT}
-    - EMAIL_FROM_ADDRESS=${EMAIL_FROM_ADDRESS}
-    - EMAIL_PASSWORD=${EMAIL_PASSWORD}
-    - SINGLE_USER=${SINGLE_USER}
-    - CILOGON_CLIENT_ID=${CILOGON_CLIENT_ID}
-    - CILOGON_CLIENT_SECRET=${CILOGON_CLIENT_SECRET}
-    - CILOGON_CALLBACK_URL=${CILOGON_CALLBACK_URL}
+      - HOME=${HOME}
+      - DOCKERIZED=${DOCKERIZED}
+      - CLOWDER_ON=${CLOWDER_ON}
+      - LOCAL_ALGORITHM=${LOCAL_ALGORITHM}
+      - GA_KEY=${GA_KEY}
+      - MINIO_URL=${MINIO_URL}
+      - MINIO_PUBLIC_ACCESS_URL=${MINIO_PUBLIC_ACCESS_URL}
+      - REDIS_URL=${REDIS_URL}
+      - SMILE_GRAPHQL_URL=${SMILE_GRAPHQL_URL}
+      - RABBITMQ_URL=${RABBITMQ_URL}
+      - BUCKET_NAME=${BUCKET_NAME}
+      - AWS_ACCESSKEY=${AWS_ACCESSKEY}
+      - AWS_ACCESSKEYSECRET=${AWS_ACCESSKEYSECRET}
+      - TWITTER_CONSUMER_KEY=${TWITTER_CONSUMER_KEY}
+      - TWITTER_CONSUMER_SECRET=${TWITTER_CONSUMER_SECRET}
+      - TWITTER_ON=${TWITTER_ON}
+      - TWITTER_V2_CLIENT_ID=${TWITTER_V2_CLIENT_ID}
+      - TWITTER_V2_CLIENT_SECRET=${TWITTER_V2_CLIENT_SECRET}
+      - TWITTER_V2_CALLBACK_URL=${TWITTER_V2_CALLBACK_URL}
+      - REDDIT_ON=${REDDIT_ON}
+      - REDDIT_CLIENT_ID=${REDDIT_CLIENT_ID}
+      - REDDIT_CLIENT_SECRET=${REDDIT_CLIENT_SECRET}
+      - REDDIT_CALLBACK_URL=${REDDIT_CALLBACK_URL}
+      - SHARE_EXPIRE_IN=${SHARE_EXPIRE_IN}
+      - BOX_CLIENT_ID=${BOX_CLIENT_ID}
+      - BOX_CLIENT_SECRET=${BOX_CLIENT_SECRET}
+      - DROPBOX_CLIENT_ID=${DROPBOX_CLIENT_ID}
+      - DROPBOX_CLIENT_SECRET=${DROPBOX_CLIENT_SECRET}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - EMAIL_HOST=${EMAIL_HOST}
+      - EMAIL_PORT=${EMAIL_PORT}
+      - EMAIL_FROM_ADDRESS=${EMAIL_FROM_ADDRESS}
+      - EMAIL_PASSWORD=${EMAIL_PASSWORD}
+      - SINGLE_USER=${SINGLE_USER}
+      - CILOGON_CLIENT_ID=${CILOGON_CLIENT_ID}
+      - CILOGON_CLIENT_SECRET=${CILOGON_CLIENT_SECRET}
+      - CILOGON_CALLBACK_URL=${CILOGON_CALLBACK_URL}
     volumes:
     - "smile_content_data:/tmp"
     - "smile_tag:${HOME}/smile"
@@ -355,8 +348,6 @@ services:
 
   smile-graphql:
     image: socialmediamacroscope/smile_graphql:0.2.7
-    depends_on:
-    - smile-server
     ports:
     - 5050:5050
     command: npm run docker-start
@@ -364,6 +355,72 @@ services:
     - DOCKERIZED=${DOCKERIZED}
     - TWITTER_CONSUMER_KEY=${TWITTER_CONSUMER_KEY}
     - TWITTER_CONSUMER_SECRET=${TWITTER_CONSUMER_SECRET}
+    restart: unless-stopped
+
+  clowder-upload-file:
+    image: socialmediamacroscope/clowder_upload_file:latest
+    container_name: clowder_upload_file
+    depends_on:
+      - rabbitmq
+    command: python ./rabbitmq_handler.py
+    environment:
+      - AWS_ACCESSKEY=${AWS_ACCESSKEY}
+      - AWS_ACCESSKEYSECRET=${AWS_ACCESSKEYSECRET}
+      - BUCKET_NAME=${BUCKET_NAME}
+      - CLOWDER_BASE_URL=${CLOWDER_BASE_URL}
+      - MINIO_PUBLIC_ACCESS_URL=${MINIO_PUBLIC_ACCESS_URL}
+      - MINIO_URL=${MINIO_URL}
+      - QUEUE_NAME=lambda_upload_clowder
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+    restart: unless-stopped
+
+  clowder-list:
+    image: socialmediamacroscope/clowder_list:latest
+    container_name: clowder_list
+    depends_on:
+      - rabbitmq
+    command: python ./rabbitmq_handler.py
+    environment:
+      - CLOWDER_BASE_URL=${CLOWDER_BASE_URL}
+      - CLOWDER_GLOBAL_KEY=${CLOWDER_GLOBAL_KEY}
+      - QUEUE_NAME=lambda_list_clowder
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+    restart: unless-stopped
+
+  clowder-create-space:
+    image: socialmediamacroscope/clowder_create_space:latest
+    container_name: clowder_create_space
+    depends_on:
+      - rabbitmq
+    command: python ./rabbitmq_handler.py
+    environment:
+      - CLOWDER_BASE_URL=${CLOWDER_BASE_URL}
+      - QUEUE_NAME=clowder_create_space
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+    restart: unless-stopped
+
+  clowder-create-dataset:
+    image: socialmediamacroscope/clowder_create_dataset:latest
+    container_name: clowder_create_dataset
+    depends_on:
+      - rabbitmq
+    command: python ./rabbitmq_handler.py
+    environment:
+      - CLOWDER_BASE_URL=${CLOWDER_BASE_URL}
+      - QUEUE_NAME=lambda_invoke_clowder
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+    restart: unless-stopped
+
+  clowder-create-collection:
+    image: socialmediamacroscope/clowder_create_collection:latest
+    container_name: clowder_create_collection
+    depends_on:
+      - rabbitmq
+    command: python ./rabbitmq_handler.py
+    environment:
+      - CLOWDER_BASE_URL=${CLOWDER_BASE_URL}
+      - QUEUE_NAME=clowder_create_collection
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
     restart: unless-stopped
 
 volumes:
