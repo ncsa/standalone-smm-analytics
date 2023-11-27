@@ -100,7 +100,7 @@ def rabbitmq_handler(ch, method, properties, body):
 
 
 if __name__ == '__main__':
-    ccredentials = pika.PlainCredentials(RABBITMQ_USER, RABBITMQ_PASSWORD)
+    credentials = pika.PlainCredentials(RABBITMQ_USER, RABBITMQ_PASSWORD)
     parameters = pika.ConnectionParameters(RABBITMQ_HOST, 5672, '/', credentials)
     connection = pika.BlockingConnection(parameters)
     channel = connection.channel()
