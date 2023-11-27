@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Reorganized repository structure [#10](https://github.com/ncsa/standalone-smm-analytics/issues/10)
 
+### Fixed
+- Rabbitmq username and password [#61](https://github.com/ncsa/standalone-smm-analytics/issues/90)
+
 ## [Beta] - 10-26-2023
 
 ### Added
