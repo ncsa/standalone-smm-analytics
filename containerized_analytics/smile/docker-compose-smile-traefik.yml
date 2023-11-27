@@ -412,7 +412,7 @@ services:
     image: socialmediamacroscope/clowder_upload_file:pr-77
     container_name: clowder_upload_file
     depends_on:
-      - smile-server
+      - rabbitmq
     command: python ./rabbitmq_handler.py
     environment:
       - AWS_ACCESSKEY=${AWS_ACCESSKEY}
@@ -430,7 +430,7 @@ services:
     image: socialmediamacroscope/clowder_list:0.1.0
     container_name: clowder_list
     depends_on:
-      - smile-server
+      - rabbitmq
     command: python ./rabbitmq_handler.py
     environment:
       - CLOWDER_BASE_URL=${CLOWDER_BASE_URL}
@@ -444,7 +444,7 @@ services:
     image: socialmediamacroscope/clowder_create_space:0.1.0
     container_name: clowder_create_space
     depends_on:
-      - smile-server
+      - rabbitmq
     command: python ./rabbitmq_handler.py
     environment:
       - CLOWDER_BASE_URL=${CLOWDER_BASE_URL}
@@ -457,7 +457,7 @@ services:
     image: socialmediamacroscope/clowder_create_dataset:0.1.0
     container_name: clowder_create_dataset
     depends_on:
-      - smile-server
+      - rabbitmq
     command: python ./rabbitmq_handler.py
     environment:
       - CLOWDER_BASE_URL=${CLOWDER_BASE_URL}
@@ -470,7 +470,7 @@ services:
     image: socialmediamacroscope/clowder_create_collection:0.1.0
     container_name: clowder_create_collection
     depends_on:
-      - smile-server
+      - rabbitmq
     command: python ./rabbitmq_handler.py
     environment:
       - CLOWDER_BASE_URL=${CLOWDER_BASE_URL}
