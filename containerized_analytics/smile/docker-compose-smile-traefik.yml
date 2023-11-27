@@ -413,6 +413,77 @@ services:
       - traefik.http.services.graphql.loadbalancer.server.port=5050
       - traefik.http.routers.graphql.tls.certresolver=myresolver
 
+  clowder-upload-file :
+    image: socialmediamacroscope/clowder_upload_file:pr-77
+    container_name: clowder_upload_file
+    depends_on:
+      - smile-server
+    command: python ./rabbitmq_handler.py
+    environment:
+      - AWS_ACCESSKEY=${AWS_ACCESSKEY}
+      - AWS_ACCESSKEYSECRET=${AWS_ACCESSKEYSECRET}
+      - BUCKET_NAME=${BUCKET_NAME}
+      - CLOWDER_BASE_URL=${CLOWDER_BASE_URL}
+      - HOST_IP=${HOST_IP}
+      - MINIO_PUBLIC_ACCESS_URL=${MINIO_PUBLIC_ACCESS_URL}
+      - MINIO_URL=${MINIO_URL}
+      - QUEUE_NAME=lambda_upload_clowder
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+    restart: unless-stopped
+
+  clowder-list:
+    image: socialmediamacroscope/clowder_list:0.1.0
+    container_name: clowder_list
+    depends_on:
+      - smile-server
+    command: python ./rabbitmq_handler.py
+    environment:
+      - CLOWDER_BASE_URL=${CLOWDER_BASE_URL}
+      - CLOWDER_GLOBAL_KEY=${CLOWDER_GLOBAL_KEY}
+      - HOST_IP=${HOST_IP}
+      - QUEUE_NAME=lambda_list_clowder
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+    restart: unless-stopped
+
+  clowder-create-space:
+    image: socialmediamacroscope/clowder_create_space:0.1.0
+    container_name: clowder_create_space
+    depends_on:
+      - smile-server
+    command: python ./rabbitmq_handler.py
+    environment:
+      - CLOWDER_BASE_URL=${CLOWDER_BASE_URL}
+      - HOST_IP=${HOST_IP}
+      - QUEUE_NAME=clowder_create_space
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+    restart: unless-stopped
+
+  clowder-create-dataset:
+    image: socialmediamacroscope/clowder_create_dataset:0.1.0
+    container_name: clowder_create_dataset
+    depends_on:
+      - smile-server
+    command: python ./rabbitmq_handler.py
+    environment:
+      - CLOWDER_BASE_URL=${CLOWDER_BASE_URL}
+      - HOST_IP=${HOST_IP}
+      - QUEUE_NAME=lambda_invoke_clowder
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+    restart: unless-stopped
+
+  clowder-create-collection:
+    image: socialmediamacroscope/clowder_create_collection:0.1.0
+    container_name: clowder_create_collection
+    depends_on:
+      - smile-server
+    command: python ./rabbitmq_handler.py
+    environment:
+      - CLOWDER_BASE_URL=${CLOWDER_BASE_URL}
+      - HOST_IP=${HOST_IP}
+      - QUEUE_NAME=clowder_create_collection
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+    restart: unless-stopped
+
 volumes:
   smile_content_data:
     driver: local
