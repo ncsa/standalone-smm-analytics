@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Rabbitmq username and password [#61](https://github.com/ncsa/standalone-smm-analytics/issues/90)
 
+### Added
+- Docker compose file for clowder connection [#88](https://github.com/ncsa/standalone-smm-analytics/issues/88)
+
 ## [Beta] - 10-26-2023
 
 ### Added
