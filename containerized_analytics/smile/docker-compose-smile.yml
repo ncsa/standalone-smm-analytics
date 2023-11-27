@@ -57,7 +57,6 @@ services:
       - minio
     command: python ./rabbitmq_handler.py
     environment:
-            #- MINIO_URL=${MINIO_URL}
       - MINIO_PUBLIC_ACCESS_URL=${MINIO_PUBLIC_ACCESS_URL}
       - RABBITMQ_HOST=${RABBITMQ_HOST}
       - AWS_ACCESSKEY=${AWS_ACCESSKEY}
@@ -73,7 +72,6 @@ services:
       - minio
     command: python ./rabbitmq_handler.py
     environment:
-      #- MINIO_URL=${MINIO_URL}
       - MINIO_PUBLIC_ACCESS_URL=${MINIO_PUBLIC_ACCESS_URL}
       - RABBITMQ_HOST=${RABBITMQ_HOST}
       - AWS_ACCESSKEY=${AWS_ACCESSKEY}
@@ -89,7 +87,6 @@ services:
       - minio
     command: python ./rabbitmq_handler.py
     environment:
-            #- MINIO_URL=${MINIO_URL}
       - MINIO_PUBLIC_ACCESS_URL=${MINIO_PUBLIC_ACCESS_URL}
       - RABBITMQ_HOST=${RABBITMQ_HOST}
       - AWS_ACCESSKEY=${AWS_ACCESSKEY}
@@ -105,7 +102,6 @@ services:
       - minio
     command: python ./rabbitmq_handler.py
     environment:
-      - MINIO_URL=${MINIO_URL}
       - MINIO_PUBLIC_ACCESS_URL=${MINIO_PUBLIC_ACCESS_URL}
       - RABBITMQ_HOST=${RABBITMQ_HOST}
       - AWS_ACCESSKEY=${AWS_ACCESSKEY}
@@ -121,7 +117,6 @@ services:
       - minio
     command: python ./rabbitmq_handler.py
     environment:
-            #- MINIO_URL=${MINIO_URL}
       - MINIO_PUBLIC_ACCESS_URL=${MINIO_PUBLIC_ACCESS_URL}
       - RABBITMQ_HOST=${RABBITMQ_HOST}
       - AWS_ACCESSKEY=${AWS_ACCESSKEY}
@@ -141,7 +136,6 @@ services:
       - minio
     command: python ./rabbitmq_handler.py
     environment:
-            #- MINIO_URL=${MINIO_URL}
       - MINIO_PUBLIC_ACCESS_URL=${MINIO_PUBLIC_ACCESS_URL}
       - RABBITMQ_HOST=${RABBITMQ_HOST}
       - AWS_ACCESSKEY=${AWS_ACCESSKEY}
@@ -161,7 +155,6 @@ services:
       - minio
     command: python ./rabbitmq_handler.py
     environment:
-      - MINIO_URL=${MINIO_URL}
       - MINIO_PUBLIC_ACCESS_URL=${MINIO_PUBLIC_ACCESS_URL}
       - RABBITMQ_HOST=${RABBITMQ_HOST}
       - AWS_ACCESSKEY=${AWS_ACCESSKEY}
@@ -181,7 +174,6 @@ services:
       - minio
     command: python ./screen_name_prompt.py
     environment:
-            #- MINIO_URL=${MINIO_URL}
       - MINIO_PUBLIC_ACCESS_URL=${MINIO_PUBLIC_ACCESS_URL}
       - RABBITMQ_HOST=${RABBITMQ_HOST}
       - AWS_ACCESSKEY=${AWS_ACCESSKEY}
@@ -197,7 +189,6 @@ services:
       - minio
     command: python ./rabbitmq_handler.py
     environment:
-            #- MINIO_URL=${MINIO_URL}
       - MINIO_PUBLIC_ACCESS_URL=${MINIO_PUBLIC_ACCESS_URL}
       - RABBITMQ_HOST=${RABBITMQ_HOST}
       - AWS_ACCESSKEY=${AWS_ACCESSKEY}
@@ -217,7 +208,6 @@ services:
       - minio
     command: python3 ./rabbitmq_handler.py
     environment:
-            #- MINIO_URL=${MINIO_URL}
       - MINIO_PUBLIC_ACCESS_URL=${MINIO_PUBLIC_ACCESS_URL}
       - RABBITMQ_HOST=${RABBITMQ_HOST}
       - AWS_ACCESSKEY=${AWS_ACCESSKEY}
@@ -237,7 +227,6 @@ services:
       - minio
     command: python3 ./rabbitmq_handler.py
     environment:
-            #- MINIO_URL=${MINIO_URL}
       - MINIO_PUBLIC_ACCESS_URL=${MINIO_PUBLIC_ACCESS_URL}
       - RABBITMQ_HOST=${RABBITMQ_HOST}
       - AWS_ACCESSKEY=${AWS_ACCESSKEY}
@@ -257,7 +246,6 @@ services:
       - minio
     command: python3 ./rabbitmq_handler.py
     environment:
-            #- MINIO_URL=${MINIO_URL}
       - MINIO_PUBLIC_ACCESS_URL=${MINIO_PUBLIC_ACCESS_URL}
       - RABBITMQ_HOST=${RABBITMQ_HOST}
       - AWS_ACCESSKEY=${AWS_ACCESSKEY}
@@ -277,7 +265,6 @@ services:
       - minio
     command: python3 ./rabbitmq_handler.py
     environment:
-            #- MINIO_URL=${MINIO_URL}
       - MINIO_PUBLIC_ACCESS_URL=${MINIO_PUBLIC_ACCESS_URL}
       - RABBITMQ_HOST=${RABBITMQ_HOST}
       - REDDIT_CLIENT_ID=${REDDIT_CLIENT_ID}
