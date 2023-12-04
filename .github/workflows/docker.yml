@@ -28,6 +28,19 @@ jobs:
         name:
           - autophrase
           - histogram
+          - check_screen_name
+          - classification_predict
+          - classification_train
+          - classification_split
+          - collect_reddit_comments
+          - crimson_hexagon_monitors
+          - image_crawler
+          - named_entity_recognition
+          - network_analysis
+          - preprocessing
+          - screen_name_prompt
+          - sentiment_analysis
+          - topic_modeling
         include:
           - name: autophrase
             dockerfile: Dockerfile
@@ -39,6 +52,71 @@ jobs:
             workdir: containerized_analytics/smile/histogram
             hub_project: socialmediamacroscope/histogram
             github_project: ncsa/histogram
+          - name: check_screen_name
+            dockerfile: Dockerfile
+            workdir: containerized_analytics/smile/check_screen_name
+            hub_project: socialmediamacroscope/check_screen_name
+            github_project: ncsa/check_screen_name
+          - name: classification_predict
+            dockerfile: Dockerfile
+            workdir: containerized_analytics/smile/classification_predict
+            hub_project: socialmediamacroscope/classification_predict
+            github_project: ncsa/classification_predict
+          - name: classification_train
+            dockerfile: Dockerfile
+            workdir: containerized_analytics/smile/classification_train
+            hub_project: socialmediamacroscope/classification_train
+            github_project: ncsa/classification_train
+          - name: classification_split
+            dockerfile: Dockerfile
+            workdir: containerized_analytics/smile/classification_split
+            hub_project: socialmediamacroscope/classification_split
+            github_project: ncsa/classification_split
+          - name: collect_reddit_comments
+            dockerfile: Dockerfile
+            workdir: containerized_analytics/smile/collect_reddit_comments
+            hub_project: socialmediamacroscope/collect_reddit_comments
+            github_project: ncsa/collect_reddit_comments
+          - name: crimson_hexagon_monitors
+            dockerfile: Dockerfile
+            workdir: containerized_analytics/smile/crimson_hexagon_monitors
+            hub_project: socialmediamacroscope/crimson_hexagon_monitors
+            github_project: ncsa/crimson_hexagon_monitors
+          - name: image_crawler
+            dockerfile: Dockerfile
+            workdir: containerized_analytics/smile/image_crawler
+            hub_project: socialmediamacroscope/image_crawler
+            github_project: ncsa/image_crawler
+          - name: named_entity_recognition
+            dockerfile: Dockerfile
+            workdir: containerized_analytics/smile/named_entity_recognition
+            hub_project: socialmediamacroscope/named_entity_recognition
+            github_project: ncsa/named_entity_recognition
+          - name: network_analysis
+            dockerfile: Dockerfile
+            workdir: containerized_analytics/smile/network_analysis
+            hub_project: socialmediamacroscope/network_analysis
+            github_project: ncsa/network_analysis
+          - name: preprocessing
+            dockerfile: Dockerfile
+            workdir: containerized_analytics/smile/preprocessing
+            hub_project: socialmediamacroscope/preprocessing
+            github_project: ncsa/preprocessing
+          - name: screen_name_prompt
+            dockerfile: Dockerfile
+            workdir: containerized_analytics/smile/screen_name_prompt
+            hub_project: socialmediamacroscope/screen_name_prompt
+            github_project: ncsa/screen_name_prompt
+          - name: sentiment_analysis
+            dockerfile: Dockerfile
+            workdir: containerized_analytics/smile/sentiment_analysis
+            hub_project: socialmediamacroscope/sentiment_analysis
+            github_project: ncsa/sentiment_analysis
+          - name: topic_modeling
+            dockerfile: Dockerfile
+            workdir: containerized_analytics/smile/topic_modeling
+            hub_project: socialmediamacroscope/topic_modeling
+            github_project: ncsa/topic_modeling
     steps:
     # checkout source code
     - uses: actions/checkout@v2
