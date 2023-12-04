@@ -7,19 +7,19 @@ import requests
 import writeToS3 as s3
 
 RABBITMQ_HOST = os.getenv('RABBITMQ_HOST', 'rabbitmq')
-RABBITMQ_USER = os.getenv('RABBITMQ_HOST', 'guest')
-RABBITMQ_PASSWORD = os.getenv('RABBITMQ_HOST', 'guest')
+RABBITMQ_USER = os.getenv('RABBITMQ_USER', 'guest')
+RABBITMQ_PASSWORD = os.getenv('RABBITMQ_PASSWORD', 'guest')
 
 
 def get_config_json(config_url):
     # download config data to json
     try:
         localPath, filename = s3.downloadUrlToDisk(config_url)
+        with open(os.path.join(localPath, filename), 'r') as f:
+            return json.load(f)
     except:
-        raise ValueError('Cannot find file in the remote storage!')
-
-    with open(os.path.join(localPath, filename), 'r') as f:
-        return json.load(f)
+        print('Cannot find configuration file in the remote storage!')
+        return None
 
 
 def rabbitmq_handler(ch, method, properties, body):
@@ -32,8 +32,11 @@ def rabbitmq_handler(ch, method, properties, body):
         auth = (event['username'], event['password'])
         dataset_id = event['payload']['dataset_id']
 
-        config_url = event['payload']['configuration']
-        config_json = get_config_json(config_url)
+        if 'configuration' in event['payload'].keys():
+            config_url = event['payload']['configuration']
+            config_json = get_config_json(config_url)
+        else:
+            config_json = None
 
         # upload files
         file_urls = []
@@ -55,14 +58,15 @@ def rabbitmq_handler(ch, method, properties, body):
             else:
                 file_urls.append(clowder_base_url + "files/" + r.json()['id'])
 
-            # add config file to metadata (default)
-            config_metadata_r = requests.post(clowder_base_url + 'api/files/' + r.json()['id'] + '/metadata',
-                                              data=json.dumps(config_json),
-                                              headers={"Content-Type": "application/json"},
-                                              auth=auth)
-            if config_metadata_r.status_code != 200:
-                raise ValueError('cannot add configuration metadata to this file: ' + r.json()['id'] + ". error: " +
-                                 config_metadata_r.text)
+            # add config file to metadata (default) if config file exists
+            if config_json is not None:
+                config_metadata_r = requests.post(clowder_base_url + 'api/files/' + r.json()['id'] + '/metadata',
+                                                  data=json.dumps(config_json),
+                                                  headers={"Content-Type": "application/json"},
+                                                  auth=auth)
+                if config_metadata_r.status_code != 200:
+                    raise ValueError('cannot add configuration metadata to this file: ' + r.json()['id'] + ". error: " +
+                                     config_metadata_r.text)
 
             # add tags
             if 'tags' in file.keys():

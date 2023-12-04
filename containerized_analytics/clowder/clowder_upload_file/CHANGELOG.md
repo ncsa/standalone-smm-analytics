@@ -7,5 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Relax the condition of always require configuration file [#77](https://github.com/ncsa/standalone-smm-analytics/issues/77)
+
 ### Fixed
 - Rabbitmq username and password [#61](https://github.com/ncsa/standalone-smm-analytics/issues/90)
+
+## [0.1.2] - 05-26-2023
+
+### Added
+- Initial feature to post file to SMM Clowder instance
+
+## [0.1.0] - 09-21-2023
+
+### Added
+- Initial release
