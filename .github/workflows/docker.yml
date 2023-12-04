@@ -32,10 +32,10 @@ jobs:
           - classification_predict
           - classification_train
           - classification_split
-          - collect_reddit_comments
+          - collect_reddit_comment
           - crimson_hexagon_monitors
           - image_crawler
-          - named_entity_recognition
+          - name_entity_recognition
           - network_analysis
           - preprocessing
           - screen_name_prompt
@@ -72,11 +72,11 @@ jobs:
             workdir: containerized_analytics/smile/classification_split
             hub_project: socialmediamacroscope/classification_split
             github_project: ncsa/classification_split
-          - name: collect_reddit_comments
+          - name: collect_reddit_comment
             dockerfile: Dockerfile
-            workdir: containerized_analytics/smile/collect_reddit_comments
-            hub_project: socialmediamacroscope/collect_reddit_comments
-            github_project: ncsa/collect_reddit_comments
+            workdir: containerized_analytics/smile/collect_reddit_comment
+            hub_project: socialmediamacroscope/collect_reddit_comment
+            github_project: ncsa/collect_reddit_comment
           - name: crimson_hexagon_monitors
             dockerfile: Dockerfile
             workdir: containerized_analytics/smile/crimson_hexagon_monitors
@@ -87,11 +87,11 @@ jobs:
             workdir: containerized_analytics/smile/image_crawler
             hub_project: socialmediamacroscope/image_crawler
             github_project: ncsa/image_crawler
-          - name: named_entity_recognition
+          - name: name_entity_recognition
             dockerfile: Dockerfile
-            workdir: containerized_analytics/smile/named_entity_recognition
-            hub_project: socialmediamacroscope/named_entity_recognition
-            github_project: ncsa/named_entity_recognition
+            workdir: containerized_analytics/smile/name_entity_recognition
+            hub_project: socialmediamacroscope/name_entity_recognition
+            github_project: ncsa/name_entity_recognition
           - name: network_analysis
             dockerfile: Dockerfile
             workdir: containerized_analytics/smile/network_analysis
