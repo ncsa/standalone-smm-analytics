@@ -190,10 +190,10 @@ jobs:
         workdir: ${{ matrix.workdir }}
 
     - name: Publish doc image to Github
-#      if: |
-#        github.repository == env.MAIN_REPO &&
-#        (github.event_name == env.GITHUB_BRANCH == 'develop')
-      if: github.repository == env.MAIN_REPO
+      if: |
+        github.repository == env.MAIN_REPO &&
+        (github.event_name == env.GITHUB_BRANCH == 'develop')
+#      if: github.repository == env.MAIN_REPO
       uses: elgohr/Publish-Docker-Github-Action@3.04
       with:
         registry: ghcr.io
