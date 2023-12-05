@@ -10,8 +10,6 @@ on:
     tags:
       - '*'
 
-  pull_request:
-
 env:
   MAIN_REPO: ncsa/standalone-smm-analytics
 
