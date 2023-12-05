@@ -51,7 +51,7 @@ jobs:
             dockerfile: Dockerfile
             workdir: containerized_analytics/smile/autophrase
             docker_repo_tag: socialmediamacroscope/autophrase
-            gitdocker_repo_tag: ncsa/autophrase
+            github_repo_tag: ncsa/autophrase
           - name: histogram
             dockerfile: Dockerfile
             workdir: containerized_analytics/smile/histogram
