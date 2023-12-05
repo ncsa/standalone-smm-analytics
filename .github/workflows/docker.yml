@@ -10,8 +10,6 @@ on:
     tags:
       - '*'
 
-  pull_request:
-
 env:
   MAIN_REPO: ncsa/standalone-smm-analytics
 
@@ -45,78 +43,78 @@ jobs:
           - name: autophrase
             dockerfile: Dockerfile
             workdir: containerized_analytics/smile/autophrase
-            hub_project: socialmediamacroscope/autophrase
-            github_project: ncsa/autophrase
+            docker_repo_tag: socialmediamacroscope/autophrase
+            gitdocker_repo_tag: ncsa/autophrase
           - name: histogram
             dockerfile: Dockerfile
             workdir: containerized_analytics/smile/histogram
-            hub_project: socialmediamacroscope/histogram
-            github_project: ncsa/histogram
+            docker_repo_tag: socialmediamacroscope/histogram
+            github_repo_tag: ncsa/histogram
           - name: check_screen_name
             dockerfile: Dockerfile
             workdir: containerized_analytics/smile/check_screen_name
-            hub_project: socialmediamacroscope/check_screen_name
-            github_project: ncsa/check_screen_name
+            docker_repo_tag: socialmediamacroscope/check_screen_name
+            github_repo_tag: ncsa/check_screen_name
           - name: classification_predict
             dockerfile: Dockerfile
             workdir: containerized_analytics/smile/classification_predict
-            hub_project: socialmediamacroscope/classification_predict
-            github_project: ncsa/classification_predict
+            docker_repo_tag: socialmediamacroscope/classification_predict
+            github_repo_tag: ncsa/classification_predict
           - name: classification_train
             dockerfile: Dockerfile
             workdir: containerized_analytics/smile/classification_train
-            hub_project: socialmediamacroscope/classification_train
-            github_project: ncsa/classification_train
+            docker_repo_tag: socialmediamacroscope/classification_train
+            github_repo_tag: ncsa/classification_train
           - name: classification_split
             dockerfile: Dockerfile
             workdir: containerized_analytics/smile/classification_split
-            hub_project: socialmediamacroscope/classification_split
-            github_project: ncsa/classification_split
+            docker_repo_tag: socialmediamacroscope/classification_split
+            github_repo_tag: ncsa/classification_split
           - name: collect_reddit_comment
             dockerfile: Dockerfile
             workdir: containerized_analytics/smile/collect_reddit_comment
-            hub_project: socialmediamacroscope/collect_reddit_comment
-            github_project: ncsa/collect_reddit_comment
+            docker_repo_tag: socialmediamacroscope/collect_reddit_comment
+            github_repo_tag: ncsa/collect_reddit_comment
           - name: crimson_hexagon_monitors
             dockerfile: Dockerfile
             workdir: containerized_analytics/smile/crimson_hexagon_monitors
-            hub_project: socialmediamacroscope/crimson_hexagon_monitors
-            github_project: ncsa/crimson_hexagon_monitors
+            docker_repo_tag: socialmediamacroscope/crimson_hexagon_monitors
+            github_repo_tag: ncsa/crimson_hexagon_monitors
           - name: image_crawler
             dockerfile: Dockerfile
             workdir: containerized_analytics/smile/image_crawler
-            hub_project: socialmediamacroscope/image_crawler
-            github_project: ncsa/image_crawler
+            docker_repo_tag: socialmediamacroscope/image_crawler
+            github_repo_tag: ncsa/image_crawler
           - name: name_entity_recognition
             dockerfile: Dockerfile
             workdir: containerized_analytics/smile/name_entity_recognition
-            hub_project: socialmediamacroscope/name_entity_recognition
-            github_project: ncsa/name_entity_recognition
+            docker_repo_tag: socialmediamacroscope/name_entity_recognition
+            github_repo_tag: ncsa/name_entity_recognition
           - name: network_analysis
             dockerfile: Dockerfile
             workdir: containerized_analytics/smile/network_analysis
-            hub_project: socialmediamacroscope/network_analysis
-            github_project: ncsa/network_analysis
+            docker_repo_tag: socialmediamacroscope/network_analysis
+            github_repo_tag: ncsa/network_analysis
           - name: preprocessing
             dockerfile: Dockerfile
             workdir: containerized_analytics/smile/preprocessing
-            hub_project: socialmediamacroscope/preprocessing
-            github_project: ncsa/preprocessing
+            docker_repo_tag: socialmediamacroscope/preprocessing
+            github_repo_tag: ncsa/preprocessing
           - name: screen_name_prompt
             dockerfile: Dockerfile
             workdir: containerized_analytics/smile/screen_name_prompt
-            hub_project: socialmediamacroscope/screen_name_prompt
-            github_project: ncsa/screen_name_prompt
+            docker_repo_tag: socialmediamacroscope/screen_name_prompt
+            github_repo_tag: ncsa/screen_name_prompt
           - name: sentiment_analysis
             dockerfile: Dockerfile
             workdir: containerized_analytics/smile/sentiment_analysis
-            hub_project: socialmediamacroscope/sentiment_analysis
-            github_project: ncsa/sentiment_analysis
+            docker_repo_tag: socialmediamacroscope/sentiment_analysis
+            github_repo_tag: ncsa/sentiment_analysis
           - name: topic_modeling
             dockerfile: Dockerfile
             workdir: containerized_analytics/smile/topic_modeling
-            hub_project: socialmediamacroscope/topic_modeling
-            github_project: ncsa/topic_modeling
+            docker_repo_tag: socialmediamacroscope/topic_modeling
+            github_repo_tag: ncsa/topic_modeling
     steps:
     # checkout source code
     - uses: actions/checkout@v2
@@ -171,7 +169,7 @@ jobs:
       uses: elgohr/Publish-Docker-Github-Action@3.04
       with:
         dockerfile: ${{ matrix.dockerfile }}
-        name: ${{ matrix.hub_project }}
+        name: ${{ matrix.docker_repo_tag }}
         no_push: true
         workdir: ${{ matrix.workdir }}
 
@@ -183,7 +181,7 @@ jobs:
       uses: elgohr/Publish-Docker-Github-Action@3.04
       with:
         registry: docker.io
-        name: ${{ matrix.hub_project }}
+        name: ${{ matrix.docker_repo_tag }}
         username: ${{ secrets.HUB_USERNAME }}
         password: ${{ secrets.HUB_PASSWORD }}
         tags: "${{ env.TAGS }}"
@@ -197,7 +195,7 @@ jobs:
       uses: elgohr/Publish-Docker-Github-Action@3.04
       with:
         registry: ghcr.io
-        name: ${{ matrix.github_project }}
+        name: ${{ matrix.github_repo_tag }}
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
         tags: "${{ env.TAGS }}"
