@@ -10,6 +10,8 @@ on:
     tags:
       - '*'
 
+    pull_request:
+
 env:
   MAIN_REPO: ncsa/standalone-smm-analytics
 
@@ -39,6 +41,11 @@ jobs:
           - screen_name_prompt
           - sentiment_analysis
           - topic_modeling
+          - clowder_create_collection
+          - clowder_create_dataset
+          - clowder_create_space
+          - clowder_list
+          - clowder_upload_file
         include:
           - name: autophrase
             dockerfile: Dockerfile
@@ -115,6 +122,31 @@ jobs:
             workdir: containerized_analytics/smile/topic_modeling
             docker_repo_tag: socialmediamacroscope/topic_modeling
             github_repo_tag: ncsa/topic_modeling
+          - name: clowder_create_collection
+            dockerfile: Dockerfile
+            workdir: containerized_analytics/clowder/clowder_create_collection
+            docker_repo_tag: socialmediamacroscope/clowder_create_collection
+            github_repo_tag: ncsa/clowder_create_collection
+          - name: clowder_create_dataset
+            dockerfile: Dockerfile
+            workdir: containerized_analytics/clowder/clowder_create_dataset
+            docker_repo_tag: socialmediamacroscope/clowder_create_dataset
+            github_repo_tag: ncsa/clowder_create_dataset
+          - name: clowder_create_space
+            dockerfile: Dockerfile
+            workdir: containerized_analytics/clowder/clowder_create_space
+            docker_repo_tag: socialmediamacroscope/clowder_create_space
+            github_repo_tag: ncsa/clowder_create_space
+          - name: clowder_list
+            dockerfile: Dockerfile
+            workdir: containerized_analytics/clowder/clowder_list
+            docker_repo_tag: socialmediamacroscope/clowder_list
+            github_repo_tag: ncsa/clowder_list
+          - name: clowder_upload_file
+            dockerfile: Dockerfile
+            workdir: containerized_analytics/clowder/clowder_upload_file
+            docker_repo_tag: socialmediamacroscope/clowder_upload_file
+            github_repo_tag: ncsa/clowder_upload_file
     steps:
     # checkout source code
     - uses: actions/checkout@v2
@@ -187,9 +219,10 @@ jobs:
         workdir: ${{ matrix.workdir }}
 
     - name: Publish doc image to Github
-      if: |
-        github.repository == env.MAIN_REPO &&
-        (github.event_name == env.GITHUB_BRANCH == 'develop')
+#      if: |
+#        github.repository == env.MAIN_REPO &&
+#        (github.event_name == env.GITHUB_BRANCH == 'develop')
+      if: github.repository == env.MAIN_REPO
       uses: elgohr/Publish-Docker-Github-Action@3.04
       with:
         registry: ghcr.io
