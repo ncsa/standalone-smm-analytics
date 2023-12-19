@@ -66,7 +66,9 @@ jobs:
           fi
 
       - name: Print Version tag
-        run: echo "${{ env.TAGS }}"
+        run: |
+          echo "${{ env.TAGS }}"
+          echo "${{ inputs.push_to_where }}"
 
         # login to registries
       - name: Login to GitHub Container Registry
@@ -78,7 +80,7 @@ jobs:
 
       - name: Build docker image
         if: |
-          ${{ inputs.name }} == 'github' || ${{ inputs.name }} == 'dockerhub'
+          ${{ inputs.push_to_where }} == 'github' || ${{ inputs.push_to_where }} == 'dockerhub'
         uses: elgohr/Publish-Docker-Github-Action@3.04
         with:
           dockerfile: ${{ matrix.dockerfile }}
@@ -88,7 +90,7 @@ jobs:
 
       - name: Publish doc image to Docker Hub
         if: |
-          ${{ inputs.name }} == 'dockerhub
+          ${{ inputs.push_to_where }} == 'dockerhub
         uses: elgohr/Publish-Docker-Github-Action@3.04
         with:
           registry: docker.io
@@ -100,7 +102,7 @@ jobs:
 
       - name: Publish doc image to Github
         if: |
-          ${{ inputs.name }} == 'github'
+          ${{ inputs.push_to_where }} == 'github'
         uses: elgohr/Publish-Docker-Github-Action@3.04
         with:
           registry: ghcr.io
