@@ -91,7 +91,7 @@ jobs:
 
       - name: Publish doc image to Docker Hub
         if: |
-          env.HUBPUSH == 'dockerhub
+          env.HUBPUSH == 'dockerhub'
         uses: elgohr/Publish-Docker-Github-Action@3.04
         with:
           registry: docker.io
