@@ -37,7 +37,7 @@ jobs:
       - name: version information
         run: |
           if [ "${{ github.event.release.target_commitish }}" != "" ]; then
-            BRANCH="${{ github.event.release.target_commitish }}"
+            BRANCH="PR-${{github.event.pull_request.number}}"
           elif [[ "${{github.event_name}}" == "pull_request" ]]; then
               BRANCH="PR-${{github.event.pull_request.number}}"
           else
@@ -69,6 +69,7 @@ jobs:
         run: |
           echo "${{ env.TAGS }}"
           echo "${{ inputs.push_to_where }}"
+          echo "HUBPUSH=${{ inputs.push_to_where }}" >> $GITHUB_ENV
 
         # login to registries
       - name: Login to GitHub Container Registry
@@ -80,7 +81,7 @@ jobs:
 
       - name: Build docker image
         if: |
-          ${{ inputs.push_to_where }} == 'github' || ${{ inputs.push_to_where }} == 'dockerhub'
+          env.HUBPUSH == 'github' || env.HUBPUSH == 'dockerhub'
         uses: elgohr/Publish-Docker-Github-Action@3.04
         with:
           dockerfile: ${{ matrix.dockerfile }}
@@ -90,7 +91,7 @@ jobs:
 
       - name: Publish doc image to Docker Hub
         if: |
-          ${{ inputs.push_to_where }} == 'dockerhub
+          env.HUBPUSH == 'dockerhub
         uses: elgohr/Publish-Docker-Github-Action@3.04
         with:
           registry: docker.io
@@ -102,7 +103,7 @@ jobs:
 
       - name: Publish doc image to Github
         if: |
-          ${{ inputs.push_to_where }} == 'github'
+          env.HUBPUSH == 'github'
         uses: elgohr/Publish-Docker-Github-Action@3.04
         with:
           registry: ghcr.io
