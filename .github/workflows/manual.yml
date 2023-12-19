@@ -42,6 +42,7 @@ jobs:
               BRANCH="PR-${{github.event.pull_request.number}}"
           else
             BRANCH=${GITHUB_REF##*/}
+            echo "this hit"
           fi
           echo "GITHUB_BRANCH=${BRANCH}" >> $GITHUB_ENV
           
