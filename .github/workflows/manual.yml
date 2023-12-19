@@ -3,9 +3,114 @@ name: Manual Docker Container Build
 on:
   workflow_dispatch:
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
+env:
+  MAIN_REPO: ncsa/standalone-smm-analytics
 
+jobs:
+  # ----------------------------------------------------------------------
+  # DOCKER BUILD
+  # ----------------------------------------------------------------------
+  docker:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        name:
+          - autophrase
+        include:
+          - name: autophrase
+            dockerfile: Dockerfile
+            workdir: containerized_analytics/smile/autophrase
+            docker_repo_tag: socialmediamacroscope/autophrase
+            github_repo_tag: ncsa/autophrase
+          - name: clowder_upload_file
+            dockerfile: Dockerfile
+            workdir: containerized_analytics/clowder/clowder_upload_file
+            docker_repo_tag: socialmediamacroscope/clowder_upload_file
+            github_repo_tag: ncsa/clowder_upload_file
     steps:
-      - run: echo "Running on ${{ runner.os }}"
+      # checkout source code
+      - uses: actions/checkout@v2
+
+      # calculate version information
+      - name: version information
+        run: |
+          if [ "${{ github.event.release.target_commitish }}" != "" ]; then
+            BRANCH="${{ github.event.release.target_commitish }}"
+          elif [[ "${{github.event_name}}" == "pull_request" ]]; then
+              BRANCH="PR-${{github.event.pull_request.number}}"
+          else
+            BRANCH=${GITHUB_REF##*/}
+          fi
+          echo "GITHUB_BRANCH=${BRANCH}" >> $GITHUB_ENV
+          
+          if [ "$BRANCH" == "main" ]; then
+            VERSION=$(cat manual_jb/content/_config.yml | grep "version" | head -1 | awk -F= "{print $2 }" | sed "s/[[:alpha:]|,|-|\"|:|#|[:space:]]//g" | sed "s/-//g")
+            VERSIONS="latest"
+            OLDVERSION=""
+            TMPVERSION=$VERSION
+            while [ "$OLDVERSION" != "$TMPVERSION" ]; do
+              VERSIONS="${VERSIONS} ${TMPVERSION}"
+              OLDVERSION="${TMPVERSION}"
+              TMPVERSION=$(echo ${OLDVERSION} | sed 's/\.[0-9]*$//')
+            done
+            echo "VERSION=$VERSION" >> $GITHUB_ENV
+            echo "TAGS=${VERSIONS}" >> $GITHUB_ENV
+          elif [ "$BRANCH" == "develop" ]; then
+            echo "VERSION=develop" >> $GITHUB_ENV
+            echo "TAGS=develop" >> $GITHUB_ENV
+          else
+            echo "VERSION=testing" >> $GITHUB_ENV
+            echo "TAGS=${BRANCH}" >> $GITHUB_ENV
+          fi
+
+      - name: Print Version tag
+        run: echo "${{ env.TAGS }}"
+
+        # login to registries
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build docker image
+        if: |
+          github.repository == env.MAIN_REPO &&
+          github.event_name == 'push' && 
+          (env.GITHUB_BRANCH == 'main' || env.GITHUB_BRANCH == 'develop')
+        uses: elgohr/Publish-Docker-Github-Action@3.04
+        with:
+          dockerfile: ${{ matrix.dockerfile }}
+          name: ${{ matrix.docker_repo_tag }}
+          no_push: true
+          workdir: ${{ matrix.workdir }}
+
+      - name: Publish doc image to Docker Hub
+        if: |
+          github.repository == env.MAIN_REPO &&
+          github.event_name == 'push' && 
+          env.GITHUB_BRANCH == 'main'
+        uses: elgohr/Publish-Docker-Github-Action@3.04
+        with:
+          registry: docker.io
+          name: ${{ matrix.docker_repo_tag }}
+          username: ${{ secrets.HUB_USERNAME }}
+          password: ${{ secrets.HUB_PASSWORD }}
+          tags: "${{ env.TAGS }}"
+          workdir: ${{ matrix.workdir }}
+
+      - name: Publish doc image to Github
+        if: |
+          github.repository == env.MAIN_REPO &&
+          github.event_name == 'push' && 
+          env.GITHUB_BRANCH == 'develop'
+        uses: elgohr/Publish-Docker-Github-Action@3.04
+        with:
+          registry: ghcr.io
+          name: ${{ matrix.github_repo_tag }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          tags: "${{ env.TAGS }}"
+          workdir: ${{ matrix.workdir }}
