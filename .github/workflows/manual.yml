@@ -37,12 +37,11 @@ jobs:
       - name: version information
         run: |
           if [ "${{ github.event.release.target_commitish }}" != "" ]; then
-            BRANCH="PR-${{github.event.pull_request.number}}"
+            BRANCH="${{ github.event.release.target_commitish }}"
           elif [[ "${{github.event_name}}" == "pull_request" ]]; then
               BRANCH="PR-${{github.event.pull_request.number}}"
           else
-            BRANCH=${GITHUB_REF##*/}
-            echo "this hit"
+            BRANCH="PR-${{github.event.pull_request.number}}"
           fi
           echo "GITHUB_BRANCH=${BRANCH}" >> $GITHUB_ENV
           
