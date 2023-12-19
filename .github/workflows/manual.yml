@@ -2,6 +2,12 @@ name: Manual Docker Container Build
 
 on:
   workflow_dispatch:
+    inputs:
+      push_to_where:
+        description: 'Type either "dockerhub" or "github" to push to the respective registry'
+        default: 'github'
+        required: true
+        type: string
 
 env:
   MAIN_REPO: ncsa/standalone-smm-analytics
@@ -23,11 +29,6 @@ jobs:
             workdir: containerized_analytics/smile/autophrase
             docker_repo_tag: socialmediamacroscope/autophrase
             github_repo_tag: ncsa/autophrase
-          - name: clowder_upload_file
-            dockerfile: Dockerfile
-            workdir: containerized_analytics/clowder/clowder_upload_file
-            docker_repo_tag: socialmediamacroscope/clowder_upload_file
-            github_repo_tag: ncsa/clowder_upload_file
     steps:
       # checkout source code
       - uses: actions/checkout@v2
@@ -77,9 +78,7 @@ jobs:
 
       - name: Build docker image
         if: |
-          github.repository == env.MAIN_REPO &&
-          github.event_name == 'push' && 
-          (env.GITHUB_BRANCH == 'main' || env.GITHUB_BRANCH == 'develop')
+          ${{ inputs.name }} == 'github' || ${{ inputs.name }} == 'dockerhub'
         uses: elgohr/Publish-Docker-Github-Action@3.04
         with:
           dockerfile: ${{ matrix.dockerfile }}
@@ -89,9 +88,7 @@ jobs:
 
       - name: Publish doc image to Docker Hub
         if: |
-          github.repository == env.MAIN_REPO &&
-          github.event_name == 'push' && 
-          env.GITHUB_BRANCH == 'main'
+          ${{ inputs.name }} == 'dockerhub
         uses: elgohr/Publish-Docker-Github-Action@3.04
         with:
           registry: docker.io
@@ -103,9 +100,7 @@ jobs:
 
       - name: Publish doc image to Github
         if: |
-          github.repository == env.MAIN_REPO &&
-          github.event_name == 'push' && 
-          env.GITHUB_BRANCH == 'develop'
+          ${{ inputs.name }} == 'github'
         uses: elgohr/Publish-Docker-Github-Action@3.04
         with:
           registry: ghcr.io
