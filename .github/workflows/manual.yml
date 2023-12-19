@@ -41,7 +41,10 @@ jobs:
           elif [[ "${{github.event_name}}" == "pull_request" ]]; then
               BRANCH="PR-${{github.event.pull_request.number}}"
           else
-            BRANCH="PR-${{github.event.pull_request.number}}"
+            BRANCH=${GITHUB_REF##*/}
+            if [[ $BRANCH =~ [0-9]+ ]]; then
+              BRANCH="PR-${BASH_REMATCH[0]}"
+            fi
           fi
           echo "GITHUB_BRANCH=${BRANCH}" >> $GITHUB_ENV
           
