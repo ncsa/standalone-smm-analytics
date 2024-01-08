@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Github action for building containers [#26](https://github.com/ncsa/standalone-smm-analytics/issues/26)
+- Github action for manually building containers [#94](https://github.com/ncsa/standalone-smm-analytics/issues/94)
 
 ### Changed
 - Reorganized repository structure [#10](https://github.com/ncsa/standalone-smm-analytics/issues/10)
