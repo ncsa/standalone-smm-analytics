@@ -69,10 +69,13 @@ export GOOGLE_CLIENT_SECRET=<<google client secret>>
 
 export CLOWDER_BASE_URL=https://clowder.server.com/
 export CLOWDER_GLOBAL_KEY=<<clowder global key>>
-export CLOWSER_ON=false
+export CLOWDER_ON=false
 
 # start
 docker-compose -f docker-compose-smile.yml -d up
+
+# start with clowder add-on
+# docker-compose -f docker-compose-smile.yml -f docker-compose-smile-clowder.yml -d up
 
 # stop
 # docker-compose -f docker-compose-smile.yml down -v

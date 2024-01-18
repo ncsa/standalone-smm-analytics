@@ -1,0 +1,68 @@
+version: "3.3"
+
+services:
+  clowder-upload-file:
+    image: socialmediamacroscope/clowder_upload_file:latest
+    container_name: clowder_upload_file
+    depends_on:
+      - rabbitmq
+    command: python ./rabbitmq_handler.py
+    environment:
+      - AWS_ACCESSKEY=${AWS_ACCESSKEY}
+      - AWS_ACCESSKEYSECRET=${AWS_ACCESSKEYSECRET}
+      - BUCKET_NAME=${BUCKET_NAME}
+      - CLOWDER_BASE_URL=${CLOWDER_BASE_URL}
+      - MINIO_PUBLIC_ACCESS_URL=${MINIO_PUBLIC_ACCESS_URL}
+      - MINIO_URL=${MINIO_URL}
+      - QUEUE_NAME=lambda_upload_clowder
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+    restart: unless-stopped
+
+  clowder-list:
+    image: socialmediamacroscope/clowder_list:latest
+    container_name: clowder_list
+    depends_on:
+      - rabbitmq
+    command: python ./rabbitmq_handler.py
+    environment:
+      - CLOWDER_BASE_URL=${CLOWDER_BASE_URL}
+      - CLOWDER_GLOBAL_KEY=${CLOWDER_GLOBAL_KEY}
+      - QUEUE_NAME=lambda_list_clowder
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+    restart: unless-stopped
+
+  clowder-create-space:
+    image: socialmediamacroscope/clowder_create_space:latest
+    container_name: clowder_create_space
+    depends_on:
+      - rabbitmq
+    command: python ./rabbitmq_handler.py
+    environment:
+      - CLOWDER_BASE_URL=${CLOWDER_BASE_URL}
+      - QUEUE_NAME=clowder_create_space
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+    restart: unless-stopped
+
+  clowder-create-dataset:
+    image: socialmediamacroscope/clowder_create_dataset:latest
+    container_name: clowder_create_dataset
+    depends_on:
+      - rabbitmq
+    command: python ./rabbitmq_handler.py
+    environment:
+      - CLOWDER_BASE_URL=${CLOWDER_BASE_URL}
+      - QUEUE_NAME=lambda_invoke_clowder
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+    restart: unless-stopped
+
+  clowder-create-collection:
+    image: socialmediamacroscope/clowder_create_collection:latest
+    container_name: clowder_create_collection
+    depends_on:
+      - rabbitmq
+    command: python ./rabbitmq_handler.py
+    environment:
+      - CLOWDER_BASE_URL=${CLOWDER_BASE_URL}
+      - QUEUE_NAME=clowder_create_collection
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+    restart: unless-stopped

@@ -82,6 +82,9 @@ export CLOWDER_ON=false
 # start
 docker-compose -f docker-compose-smile-traefik.yml -d up
 
+# start with clowder add-on
+# docker-compose -f docker-compose-smile-traefik.yml -f docker-compose-smile-clowder.yml -d up
+
 # stop
 # docker-compose -f docker-compose-smile.yml down -v
 
