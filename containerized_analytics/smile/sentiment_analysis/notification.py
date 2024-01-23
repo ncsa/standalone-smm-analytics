@@ -202,7 +202,7 @@ def notification(toaddr, case, filename, links, sessionURL):
                                 </div>
                             </body>
                     </html>"""
-                subject = f'Your{fpath[2]}computation is completed!'
+                subject = f'Your {fpath[2]} computation is completed!'
             else:
                 html = None
                 subject = None
