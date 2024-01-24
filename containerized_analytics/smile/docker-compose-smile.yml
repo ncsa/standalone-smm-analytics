@@ -1,0 +1,368 @@
+version: "3.3"
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - 5672:5672
+      - 15672:15672
+
+  minio:
+    image: minio/minio
+    container_name: minio
+    hostname: minio
+    ports:
+      - 9000:9000
+      - 9001:9001
+    volumes:
+      - "smile_content_data:/data"
+    environment:
+      - MINIO_ROOT_USER=${AWS_ACCESSKEY}
+      - MINIO_ROOT_PASSWORD=${AWS_ACCESSKEYSECRET}
+    command: server /data --console-address ":9001"
+    restart: unless-stopped
+
+  redis:
+    image: redis
+    hostname: redis
+    ports:
+      - 6379:6379
+    restart: unless-stopped
+
+  nginx:
+    build: ./nginx
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      - smile-server
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+    restart: unless-stopped
+
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+    restart: unless-stopped
+
+  algorithm-classification-predict:
+    image: socialmediamacroscope/classification_predict:latest
+    depends_on:
+      - rabbitmq
+      - minio
+    command: python ./rabbitmq_handler.py
+    environment:
+      - MINIO_PUBLIC_ACCESS_URL=${MINIO_PUBLIC_ACCESS_URL}
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+      - AWS_ACCESSKEY=${AWS_ACCESSKEY}
+      - AWS_ACCESSKEYSECRET=${AWS_ACCESSKEYSECRET}
+      - BUCKET_NAME=${BUCKET_NAME}
+      - QUEUE_NAME=classification_predict
+    restart: unless-stopped    
+
+  algorithm-classification-split:
+    image: socialmediamacroscope/classification_split:latest
+    depends_on:
+      - rabbitmq
+      - minio
+    command: python ./rabbitmq_handler.py
+    environment:
+      - MINIO_PUBLIC_ACCESS_URL=${MINIO_PUBLIC_ACCESS_URL}
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+      - AWS_ACCESSKEY=${AWS_ACCESSKEY}
+      - AWS_ACCESSKEYSECRET=${AWS_ACCESSKEYSECRET}
+      - BUCKET_NAME=${BUCKET_NAME}
+      - QUEUE_NAME=classification_split
+    restart: unless-stopped
+
+  algorithm-classification-train:
+    image: socialmediamacroscope/classification_train:latest
+    depends_on:
+      - rabbitmq
+      - minio
+    command: python ./rabbitmq_handler.py
+    environment:
+      - MINIO_PUBLIC_ACCESS_URL=${MINIO_PUBLIC_ACCESS_URL}
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+      - AWS_ACCESSKEY=${AWS_ACCESSKEY}
+      - AWS_ACCESSKEYSECRET=${AWS_ACCESSKEYSECRET}
+      - BUCKET_NAME=${BUCKET_NAME}
+      - QUEUE_NAME=classification_train
+    restart: unless-stopped
+
+  algorithm-histogram:
+    image: socialmediamacroscope/histogram:latest
+    depends_on:
+      - rabbitmq
+      - minio
+    command: python ./rabbitmq_handler.py
+    environment:
+      - MINIO_PUBLIC_ACCESS_URL=${MINIO_PUBLIC_ACCESS_URL}
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+      - AWS_ACCESSKEY=${AWS_ACCESSKEY}
+      - AWS_ACCESSKEYSECRET=${AWS_ACCESSKEYSECRET}
+      - BUCKET_NAME=${BUCKET_NAME}
+      - QUEUE_NAME=histogram
+    restart: unless-stopped
+
+  algorithm-network-analysis:
+    image: socialmediamacroscope/network_analysis:latest
+    depends_on:
+      - rabbitmq
+      - minio
+    command: python ./rabbitmq_handler.py
+    environment:
+      - MINIO_PUBLIC_ACCESS_URL=${MINIO_PUBLIC_ACCESS_URL}
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+      - AWS_ACCESSKEY=${AWS_ACCESSKEY}
+      - AWS_ACCESSKEYSECRET=${AWS_ACCESSKEYSECRET}
+      - BUCKET_NAME=${BUCKET_NAME}
+      - QUEUE_NAME=network_analysis
+      - EMAIL_HOST=${EMAIL_HOST}
+      - EMAIL_PORT=${EMAIL_PORT}
+      - EMAIL_FROM_ADDRESS=${EMAIL_FROM_ADDRESS}
+      - EMAIL_PASSWORD=${EMAIL_PASSWORD}
+    restart: unless-stopped
+
+  algorithm-preprocessing:
+    image: socialmediamacroscope/preprocessing:latest
+    depends_on:
+      - rabbitmq
+      - minio
+    command: python ./rabbitmq_handler.py
+    environment:
+      - MINIO_PUBLIC_ACCESS_URL=${MINIO_PUBLIC_ACCESS_URL}
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+      - AWS_ACCESSKEY=${AWS_ACCESSKEY}
+      - AWS_ACCESSKEYSECRET=${AWS_ACCESSKEYSECRET}
+      - BUCKET_NAME=${BUCKET_NAME}
+      - QUEUE_NAME=preprocessing
+      - EMAIL_HOST=${EMAIL_HOST}
+      - EMAIL_PORT=${EMAIL_PORT}
+      - EMAIL_FROM_ADDRESS=${EMAIL_FROM_ADDRESS}
+      - EMAIL_PASSWORD=${EMAIL_PASSWORD}
+    restart: unless-stopped
+
+  algorithm-sentiment-analysis:
+    image: socialmediamacroscope/sentiment_analysis:latest
+    depends_on:
+      - rabbitmq
+      - minio
+    command: python ./rabbitmq_handler.py
+    environment:
+      - MINIO_PUBLIC_ACCESS_URL=${MINIO_PUBLIC_ACCESS_URL}
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+      - AWS_ACCESSKEY=${AWS_ACCESSKEY}
+      - AWS_ACCESSKEYSECRET=${AWS_ACCESSKEYSECRET}
+      - BUCKET_NAME=${BUCKET_NAME}
+      - QUEUE_NAME=sentiment_analysis
+      - EMAIL_HOST=${EMAIL_HOST}
+      - EMAIL_PORT=${EMAIL_PORT}
+      - EMAIL_FROM_ADDRESS=${EMAIL_FROM_ADDRESS}
+      - EMAIL_PASSWORD=${EMAIL_PASSWORD}
+    restart: unless-stopped
+
+  algorithm-screen-name-prompt:
+    image: socialmediamacroscope/screen_name_prompt:latest
+    depends_on:
+      - rabbitmq
+      - minio
+    command: python ./screen_name_prompt.py
+    environment:
+      - MINIO_PUBLIC_ACCESS_URL=${MINIO_PUBLIC_ACCESS_URL}
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+      - AWS_ACCESSKEY=${AWS_ACCESSKEY}
+      - AWS_ACCESSKEYSECRET=${AWS_ACCESSKEYSECRET}
+      - BUCKET_NAME=${BUCKET_NAME}
+      - QUEUE_NAME=bae_screen_name_prompt
+    restart: unless-stopped
+
+  algorithm-topic-modeling:
+    image: socialmediamacroscope/topic_modeling:latest
+    depends_on:
+      - rabbitmq
+      - minio
+    command: python ./rabbitmq_handler.py
+    environment:
+      - MINIO_PUBLIC_ACCESS_URL=${MINIO_PUBLIC_ACCESS_URL}
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+      - AWS_ACCESSKEY=${AWS_ACCESSKEY}
+      - AWS_ACCESSKEYSECRET=${AWS_ACCESSKEYSECRET}
+      - BUCKET_NAME=${BUCKET_NAME}
+      - QUEUE_NAME=topic_modeling
+      - EMAIL_HOST=${EMAIL_HOST}
+      - EMAIL_PORT=${EMAIL_PORT}
+      - EMAIL_FROM_ADDRESS=${EMAIL_FROM_ADDRESS}
+      - EMAIL_PASSWORD=${EMAIL_PASSWORD}
+    restart: unless-stopped
+
+  algorithm-name-entity-recognition:
+    image: socialmediamacroscope/name_entity_recognition:latest
+    depends_on:
+      - rabbitmq
+      - minio
+    command: python3 ./rabbitmq_handler.py
+    environment:
+      - MINIO_PUBLIC_ACCESS_URL=${MINIO_PUBLIC_ACCESS_URL}
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+      - AWS_ACCESSKEY=${AWS_ACCESSKEY}
+      - AWS_ACCESSKEYSECRET=${AWS_ACCESSKEYSECRET}
+      - BUCKET_NAME=${BUCKET_NAME}
+      - QUEUE_NAME=name_entity_recognition
+      - EMAIL_HOST=${EMAIL_HOST}
+      - EMAIL_PORT=${EMAIL_PORT}
+      - EMAIL_FROM_ADDRESS=${EMAIL_FROM_ADDRESS}
+      - EMAIL_PASSWORD=${EMAIL_PASSWORD}
+    restart: unless-stopped
+
+  algorithm-autophrase:
+    image: socialmediamacroscope/autophrase:latest
+    depends_on:
+      - rabbitmq
+      - minio
+    command: python3 ./rabbitmq_handler.py
+    environment:
+      - MINIO_PUBLIC_ACCESS_URL=${MINIO_PUBLIC_ACCESS_URL}
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+      - AWS_ACCESSKEY=${AWS_ACCESSKEY}
+      - AWS_ACCESSKEYSECRET=${AWS_ACCESSKEYSECRET}
+      - BUCKET_NAME=${BUCKET_NAME}
+      - QUEUE_NAME=autophrase
+      - EMAIL_HOST=${EMAIL_HOST}
+      - EMAIL_PORT=${EMAIL_PORT}
+      - EMAIL_FROM_ADDRESS=${EMAIL_FROM_ADDRESS}
+      - EMAIL_PASSWORD=${EMAIL_PASSWORD}
+    restart: unless-stopped
+
+  image-crawler:
+    image: socialmediamacroscope/image_crawler:latest
+    depends_on:
+      - rabbitmq
+      - minio
+    command: python3 ./rabbitmq_handler.py
+    environment:
+      - MINIO_PUBLIC_ACCESS_URL=${MINIO_PUBLIC_ACCESS_URL}
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+      - AWS_ACCESSKEY=${AWS_ACCESSKEY}
+      - AWS_ACCESSKEYSECRET=${AWS_ACCESSKEYSECRET}
+      - BUCKET_NAME=${BUCKET_NAME}
+      - QUEUE_NAME=image_crawler
+      - EMAIL_HOST=${EMAIL_HOST}
+      - EMAIL_PORT=${EMAIL_PORT}
+      - EMAIL_FROM_ADDRESS=${EMAIL_FROM_ADDRESS}
+      - EMAIL_PASSWORD=${EMAIL_PASSWORD}
+    restart: unless-stopped
+
+  collect-reddit-comment:
+    image: socialmediamacroscope/collect_reddit_comment:latest
+    depends_on:
+      - rabbitmq
+      - minio
+    command: python3 ./rabbitmq_handler.py
+    environment:
+      - MINIO_PUBLIC_ACCESS_URL=${MINIO_PUBLIC_ACCESS_URL}
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+      - REDDIT_CLIENT_ID=${REDDIT_CLIENT_ID}
+      - REDDIT_CLIENT_SECRET=${REDDIT_CLIENT_SECRET}
+      - AWS_ACCESSKEY=${AWS_ACCESSKEY}
+      - AWS_ACCESSKEYSECRET=${AWS_ACCESSKEYSECRET}
+      - BUCKET_NAME=${BUCKET_NAME}
+      - QUEUE_NAME=reddit_comment
+      - EMAIL_HOST=${EMAIL_HOST}
+      - EMAIL_PORT=${EMAIL_PORT}
+      - EMAIL_FROM_ADDRESS=${EMAIL_FROM_ADDRESS}
+      - EMAIL_PASSWORD=${EMAIL_PASSWORD}
+    restart: unless-stopped
+
+  smile-server:
+    image: socialmediamacroscope/smile_server:latest
+    depends_on:
+      - rabbitmq
+      - minio
+      - redis
+      - smile-graphql
+    ports:
+    - 8001:8001
+    command: npm run docker-start
+    environment:
+      - HOME=${HOME}
+      - DOCKERIZED=${DOCKERIZED}
+      - CLOWDER_ON=${CLOWDER_ON}
+      - LOCAL_ALGORITHM=${LOCAL_ALGORITHM}
+      - GA_KEY=${GA_KEY}
+      - MINIO_URL=${MINIO_URL}
+      - MINIO_PUBLIC_ACCESS_URL=${MINIO_PUBLIC_ACCESS_URL}
+      - REDIS_URL=${REDIS_URL}
+      - SMILE_GRAPHQL_URL=${SMILE_GRAPHQL_URL}
+      - RABBITMQ_URL=${RABBITMQ_URL}
+      - BUCKET_NAME=${BUCKET_NAME}
+      - AWS_ACCESSKEY=${AWS_ACCESSKEY}
+      - AWS_ACCESSKEYSECRET=${AWS_ACCESSKEYSECRET}
+      - TWITTER_CONSUMER_KEY=${TWITTER_CONSUMER_KEY}
+      - TWITTER_CONSUMER_SECRET=${TWITTER_CONSUMER_SECRET}
+      - TWITTER_ON=${TWITTER_ON}
+      - TWITTER_V2_CLIENT_ID=${TWITTER_V2_CLIENT_ID}
+      - TWITTER_V2_CLIENT_SECRET=${TWITTER_V2_CLIENT_SECRET}
+      - TWITTER_V2_CALLBACK_URL=${TWITTER_V2_CALLBACK_URL}
+      - REDDIT_ON=${REDDIT_ON}
+      - REDDIT_CLIENT_ID=${REDDIT_CLIENT_ID}
+      - REDDIT_CLIENT_SECRET=${REDDIT_CLIENT_SECRET}
+      - REDDIT_CALLBACK_URL=${REDDIT_CALLBACK_URL}
+      - SHARE_EXPIRE_IN=${SHARE_EXPIRE_IN}
+      - BOX_CLIENT_ID=${BOX_CLIENT_ID}
+      - BOX_CLIENT_SECRET=${BOX_CLIENT_SECRET}
+      - DROPBOX_CLIENT_ID=${DROPBOX_CLIENT_ID}
+      - DROPBOX_CLIENT_SECRET=${DROPBOX_CLIENT_SECRET}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - EMAIL_HOST=${EMAIL_HOST}
+      - EMAIL_PORT=${EMAIL_PORT}
+      - EMAIL_FROM_ADDRESS=${EMAIL_FROM_ADDRESS}
+      - EMAIL_PASSWORD=${EMAIL_PASSWORD}
+      - SINGLE_USER=${SINGLE_USER}
+      - CILOGON_CLIENT_ID=${CILOGON_CLIENT_ID}
+      - CILOGON_CLIENT_SECRET=${CILOGON_CLIENT_SECRET}
+      - CILOGON_CALLBACK_URL=${CILOGON_CALLBACK_URL}
+    volumes:
+    - "smile_content_data:/tmp"
+    - "smile_tag:${HOME}/smile"
+    restart: unless-stopped
+
+  smile-graphql:
+    image: socialmediamacroscope/smile_graphql:latest
+    ports:
+    - 5050:5050
+    command: npm run docker-start
+    environment:
+    - DOCKERIZED=${DOCKERIZED}
+    - TWITTER_CONSUMER_KEY=${TWITTER_CONSUMER_KEY}
+    - TWITTER_CONSUMER_SECRET=${TWITTER_CONSUMER_SECRET}
+    restart: unless-stopped
+
+volumes:
+  smile_content_data:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      # put your own local data path here
+      device: "${HOME}/smile_data"
+
+  smile_user:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: "${HOME}/smile_user"
+
+  smile_tag:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: "${HOME}/smile"
