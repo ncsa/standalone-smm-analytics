@@ -163,7 +163,7 @@ jobs:
         fi
         echo "GITHUB_BRANCH=${BRANCH}" >> $GITHUB_ENV
 
-        if [ "$BRANCH" == "main" ]; then
+        if [ "$BRANCH" == "PR-107" ]; then
           VERSION=$(cat "${{ matrix.workdir }}/CHANGELOG.md" | grep "version" | head -1 | awk -F= "{print $2 }" | sed "s/[[:alpha:]|,|-|\"|:|#|[:space:]]//g" | sed "s/-//g")
           VERSIONS="latest"
           OLDVERSION=""
