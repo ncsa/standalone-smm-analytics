@@ -163,7 +163,7 @@ jobs:
         fi
         echo "GITHUB_BRANCH=${BRANCH}" >> $GITHUB_ENV
 
-        if [ "$BRANCH" == "PR-107" ]; then
+        if [ "$BRANCH" == "main" ]; then
           CHANGELOG_FILE="${{ matrix.workdir }}/CHANGELOG.md"
           if [ -e "$CHANGELOG_FILE" ]; then
             VERSION=$(cat "$CHANGELOG_FILE" | grep -Eo '\[[0-9]+\.[0-9]+\.[0-9]+\]'| head -1 | tr -d '[]')
