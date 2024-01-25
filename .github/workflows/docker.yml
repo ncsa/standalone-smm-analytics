@@ -162,31 +162,26 @@ jobs:
           BRANCH=${GITHUB_REF##*/}
         fi
         echo "GITHUB_BRANCH=${BRANCH}" >> $GITHUB_ENV
-        
-        for COMPONENT in ${{ matrix.name }}; do
-          if [ "$BRANCH" == "main" ]; then
-            CHANGELOG_PATH="${COMPONENT}/CHANGELOG.md"
-            if [ -f "$CHANGELOG_PATH" ]; then
-              VERSION=$(cat "$CHANGELOG_PATH" | grep "version" | head -1 | awk -F= "{print $2 }" | sed "s/[[:alpha:]|,|-|\"|:|#|[:space:]]//g" | sed "s/-//g")
-              VERSIONS="latest"
-              OLDVERSION=""
-              TMPVERSION=$VERSION
-              while [ "$OLDVERSION" != "$TMPVERSION" ]; do
-                VERSIONS="${VERSIONS} ${TMPVERSION}"
-                OLDVERSION="${TMPVERSION}"
-                TMPVERSION=$(echo ${OLDVERSION} | sed 's/\.[0-9]*$//')
-              done
-              echo "${COMPONENT}_VERSION=${VERSIONS}" >> $GITHUB_ENV
-              echo "${COMPONENT}_TAGS=${VERSIONS}" >> $GITHUB_ENV
-            else
-              echo "${COMPONENT}_VERSION="latest" >> $GITHUB_ENV
-              echo "${COMPONENT}_TAGS=${VERSIONS}" >> $GITHUB_ENV
-            fi
-          elif [ "$BRANCH" == "develop" ]; then
-            echo "${COMPONENT}_VERSION=develop" >> $GITHUB_ENV
-            echo "${COMPONENT}_TAGS=develop" >> $GITHUB_ENV
-          else
-            echo "${COMPONENT}_VERSION=testing" >> $GITHUB_ENV
-            echo "${COMPONENT}_TAGS=${BRANCH}" >> $GITHUB_ENV
-          fi
-        done
+
+        if [ "$BRANCH" == "main" ]; then
+          VERSION=$(cat "${{ matrix.workdir }}/CHANGELOG.md" | grep "version" | head -1 | awk -F= "{print $2 }" | sed "s/[[:alpha:]|,|-|\"|:|#|[:space:]]//g" | sed "s/-//g")
+          VERSIONS="latest"
+          OLDVERSION=""
+          TMPVERSION=$VERSION
+          while [ "$OLDVERSION" != "$TMPVERSION" ]; do
+            VERSIONS="${VERSIONS} ${TMPVERSION}"
+            OLDVERSION="${TMPVERSION}"
+            TMPVERSION=$(echo ${OLDVERSION} | sed 's/\.[0-9]*$//')
+          done
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "TAGS=${VERSIONS}" >> $GITHUB_ENV
+        elif [ "$BRANCH" == "develop" ]; then
+          echo "VERSION=develop" >> $GITHUB_ENV
+          echo "TAGS=develop" >> $GITHUB_ENV
+        else
+          echo "VERSION=testing" >> $GITHUB_ENV
+          echo "TAGS=${BRANCH}" >> $GITHUB_ENV
+        fi
+
+    - name: Print Version tag
+      run: echo "${{ env.TAGS }}"
