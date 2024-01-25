@@ -156,24 +156,27 @@ jobs:
               BRANCH="PR-${{github.event.pull_request.number}}"
           else
             BRANCH=${GITHUB_REF##*/}
-            if [[ $BRANCH =~ [0-9]+ ]]; then
-              BRANCH="PR-${BASH_REMATCH[0]}"
-            fi
           fi
           echo "GITHUB_BRANCH=${BRANCH}" >> $GITHUB_ENV
-          
+
           if [ "$BRANCH" == "main" ]; then
-            VERSION=$(cat manual_jb/content/_config.yml | grep "version" | head -1 | awk -F= "{print $2 }" | sed "s/[[:alpha:]|,|-|\"|:|#|[:space:]]//g" | sed "s/-//g")
-            VERSIONS="latest"
-            OLDVERSION=""
-            TMPVERSION=$VERSION
-            while [ "$OLDVERSION" != "$TMPVERSION" ]; do
-              VERSIONS="${VERSIONS} ${TMPVERSION}"
-              OLDVERSION="${TMPVERSION}"
-              TMPVERSION=$(echo ${OLDVERSION} | sed 's/\.[0-9]*$//')
-            done
-            echo "VERSION=$VERSION" >> $GITHUB_ENV
-            echo "TAGS=${VERSIONS}" >> $GITHUB_ENV
+            CHANGELOG_FILE="${{ matrix.workdir }}/CHANGELOG.md"
+            if [ -e "$CHANGELOG_FILE" ]; then
+              VERSION=$(cat "$CHANGELOG_FILE" | grep -Eo '\[[0-9]+\.[0-9]+\.[0-9]+\]'| head -1 | tr -d '[]')
+              VERSIONS="latest"
+              OLDVERSION=""
+              TMPVERSION=$VERSION
+              while [ "$OLDVERSION" != "$TMPVERSION" ]; do
+                VERSIONS="${VERSIONS} ${TMPVERSION}"
+                OLDVERSION="${TMPVERSION}"
+                TMPVERSION=$(echo ${OLDVERSION} | sed 's/\.[0-9]*$//')
+              done
+              echo "VERSION=$VERSION" >> $GITHUB_ENV
+              echo "TAGS=${VERSIONS}" >> $GITHUB_ENV
+            else
+              echo "VERSION=latest" >> $GITHUB_ENV
+              echo "TAGS=latest" >> $GITHUB_ENV          
+            fi
           elif [ "$BRANCH" == "develop" ]; then
             echo "VERSION=develop" >> $GITHUB_ENV
             echo "TAGS=develop" >> $GITHUB_ENV
@@ -181,7 +184,6 @@ jobs:
             echo "VERSION=testing" >> $GITHUB_ENV
             echo "TAGS=${BRANCH}" >> $GITHUB_ENV
           fi
-
       - name: Print Version tag
         run: |
           echo "${{ env.TAGS }}"
