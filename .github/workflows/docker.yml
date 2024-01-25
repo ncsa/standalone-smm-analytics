@@ -162,74 +162,31 @@ jobs:
           BRANCH=${GITHUB_REF##*/}
         fi
         echo "GITHUB_BRANCH=${BRANCH}" >> $GITHUB_ENV
-
-        if [ "$BRANCH" == "main" ]; then
-          VERSION=$(cat manual_jb/content/_config.yml | grep "version" | head -1 | awk -F= "{print $2 }" | sed "s/[[:alpha:]|,|-|\"|:|#|[:space:]]//g" | sed "s/-//g")
-          VERSIONS="latest"
-          OLDVERSION=""
-          TMPVERSION=$VERSION
-          while [ "$OLDVERSION" != "$TMPVERSION" ]; do
-            VERSIONS="${VERSIONS} ${TMPVERSION}"
-            OLDVERSION="${TMPVERSION}"
-            TMPVERSION=$(echo ${OLDVERSION} | sed 's/\.[0-9]*$//')
-          done
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
-          echo "TAGS=${VERSIONS}" >> $GITHUB_ENV
-        elif [ "$BRANCH" == "develop" ]; then
-          echo "VERSION=develop" >> $GITHUB_ENV
-          echo "TAGS=develop" >> $GITHUB_ENV
-        else
-          echo "VERSION=testing" >> $GITHUB_ENV
-          echo "TAGS=${BRANCH}" >> $GITHUB_ENV
-        fi
-
-    - name: Print Version tag
-      run: echo "${{ env.TAGS }}"
-
-      # login to registries
-    - name: Login to GitHub Container Registry
-      uses: docker/login-action@v2
-      with:
-        registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Build docker image
-      if: |
-        github.repository == env.MAIN_REPO &&
-        github.event_name == 'push' && 
-        (env.GITHUB_BRANCH == 'main' || env.GITHUB_BRANCH == 'develop')
-      uses: elgohr/Publish-Docker-Github-Action@3.04
-      with:
-        dockerfile: ${{ matrix.dockerfile }}
-        name: ${{ matrix.docker_repo_tag }}
-        no_push: true
-        workdir: ${{ matrix.workdir }}
-
-    - name: Publish doc image to Docker Hub
-      if: |
-        github.repository == env.MAIN_REPO &&
-        github.event_name == 'push' && 
-        env.GITHUB_BRANCH == 'main'
-      uses: elgohr/Publish-Docker-Github-Action@3.04
-      with:
-        registry: docker.io
-        name: ${{ matrix.docker_repo_tag }}
-        username: ${{ secrets.HUB_USERNAME }}
-        password: ${{ secrets.HUB_PASSWORD }}
-        tags: "${{ env.TAGS }}"
-        workdir: ${{ matrix.workdir }}
-
-    - name: Publish doc image to Github
-      if: |
-        github.repository == env.MAIN_REPO &&
-        github.event_name == 'push' && 
-        env.GITHUB_BRANCH == 'develop'
-      uses: elgohr/Publish-Docker-Github-Action@3.04
-      with:
-        registry: ghcr.io
-        name: ${{ matrix.github_repo_tag }}
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-        tags: "${{ env.TAGS }}"
-        workdir: ${{ matrix.workdir }}
+        
+        for COMPONENT in ${{ matrix.name }}; do
+          if [ "$BRANCH" == "main" ]; then
+            CHANGELOG_PATH="${COMPONENT}/CHANGELOG.md"
+            if [ -f "$CHANGELOG_PATH" ]; then
+              VERSION=$(cat "$CHANGELOG_PATH" | grep "version" | head -1 | awk -F= "{print $2 }" | sed "s/[[:alpha:]|,|-|\"|:|#|[:space:]]//g" | sed "s/-//g")
+              VERSIONS="latest"
+              OLDVERSION=""
+              TMPVERSION=$VERSION
+              while [ "$OLDVERSION" != "$TMPVERSION" ]; do
+                VERSIONS="${VERSIONS} ${TMPVERSION}"
+                OLDVERSION="${TMPVERSION}"
+                TMPVERSION=$(echo ${OLDVERSION} | sed 's/\.[0-9]*$//')
+              done
+              echo "${COMPONENT}_VERSION=${VERSIONS}" >> $GITHUB_ENV
+              echo "${COMPONENT}_TAGS=${VERSIONS}" >> $GITHUB_ENV
+            else
+              echo "${COMPONENT}_VERSION="latest" >> $GITHUB_ENV
+              echo "${COMPONENT}_TAGS=${VERSIONS}" >> $GITHUB_ENV
+            fi
+          elif [ "$BRANCH" == "develop" ]; then
+            echo "${COMPONENT}_VERSION=develop" >> $GITHUB_ENV
+            echo "${COMPONENT}_TAGS=develop" >> $GITHUB_ENV
+          else
+            echo "${COMPONENT}_VERSION=testing" >> $GITHUB_ENV
+            echo "${COMPONENT}_TAGS=${BRANCH}" >> $GITHUB_ENV
+          fi
+        done
