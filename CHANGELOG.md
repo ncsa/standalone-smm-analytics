@@ -4,11 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [Beta-1] - 01-23-2024
 
 ### Added
 - Github action for building containers [#26](https://github.com/ncsa/standalone-smm-analytics/issues/26)
 - Github action for manually building containers [#94](https://github.com/ncsa/standalone-smm-analytics/issues/94)
+- Docker compose file for clowder connection [#88](https://github.com/ncsa/standalone-smm-analytics/issues/88)
 
 ### Changed
 - Reorganized repository structure [#10](https://github.com/ncsa/standalone-smm-analytics/issues/10)
@@ -16,8 +17,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Rabbitmq username and password [#61](https://github.com/ncsa/standalone-smm-analytics/issues/90)
 
-### Added
-- Docker compose file for clowder connection [#88](https://github.com/ncsa/standalone-smm-analytics/issues/88)
 
 ## [Beta] - 10-26-2023
 
