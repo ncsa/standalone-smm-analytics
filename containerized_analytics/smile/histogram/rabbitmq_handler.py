@@ -110,6 +110,15 @@ def rabbitmq_handler(ch, method, properties, body):
                 interval = '1M'
             freq = count_freq(df, 'info.dateuploaded', interval, 's')
 
+        # youtube videos
+        elif 'snnipet.publishedAt' in df.columns:
+            # default at 1 month
+            if 'interval' in event:
+                interval = event['interval']
+            else:
+                interval = '1M'
+            freq = count_freq(df, 'snnipet.publishedAt', interval, 's')
+
         else:
             return {'url': 'null'}
 
