@@ -67,9 +67,9 @@ def plot_freq(index, counts, interval, localPath, remotePath):
     return div_url
 
 
-def count_freq(df, time_col_name, time_freq, time_unit):
+def count_freq(df, time_col_name, time_freq, time_unit=None):
     # convert time column to datetime
-    df[time_col_name] = pd.to_datetime(df[time_col_name],unit=time_unit)
+    df[time_col_name] = pd.to_datetime(df[time_col_name], unit=time_unit)
     # set index to datetime
     df.set_index(df[time_col_name],inplace=True)
 

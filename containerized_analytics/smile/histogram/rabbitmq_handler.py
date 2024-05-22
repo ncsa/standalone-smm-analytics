@@ -117,10 +117,10 @@ def rabbitmq_handler(ch, method, properties, body):
                 interval = event['interval']
             else:
                 interval = '1M'
-            freq = count_freq(df, 'snippet.publishedAt', interval, 's')
+            freq = count_freq(df, 'snippet.publishedAt', interval)
 
         else:
-            print("No time column found")
+            print("No valid time column found")
             return {'url': 'null'}
 
         index = freq.index.tolist()
