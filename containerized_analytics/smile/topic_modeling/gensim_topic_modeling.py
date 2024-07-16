@@ -7,6 +7,7 @@ from gensim.models import CoherenceModel
 from nltk import WordNetLemmatizer
 import pyLDAvis
 import pyLDAvis.gensim
+from langdetect import detect
 
 
 class Gensim_Topic_Modeling:
@@ -16,6 +17,9 @@ class Gensim_Topic_Modeling:
             'str').tolist()
 
     def preprocessing(self):
+        # Detect and keep only English texts
+        self.data = [sent for sent in self.data if detect(sent) == 'en']
+
         self.data = [re.sub('\S*@\S*\s?', "", sent) for sent in self.data]
         self.data = [re.sub('\s+', ' ', sent) for sent in self.data]
         self.data = [re.sub("\'", "", sent) for sent in self.data]
