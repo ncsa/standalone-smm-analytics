@@ -12,7 +12,18 @@ def algorithm(df, params):
 
     output = {}
 
-    gensim_tm = Gensim_Topic_Modeling(df, column=params["column"])
+    # Check if english_only and language_score exist in params
+    english_only_param = params["english_only"] if "english_only" in params else True
+    language_score_param = params["language_score"] if "language_score" in params else 0.9
+
+    # Call the Gensim_Topic_Modeling function
+    gensim_tm = Gensim_Topic_Modeling(
+        df,
+        column=params["column"],
+        english_only=english_only_param,
+        language_score=language_score_param
+    )
+
     data_lemmatized, id2word, corpus = gensim_tm.preprocessing()
     output['lemmatized'] = data_lemmatized
 
