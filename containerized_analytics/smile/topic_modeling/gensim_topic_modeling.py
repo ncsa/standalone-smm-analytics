@@ -7,18 +7,35 @@ from gensim.models import CoherenceModel
 from nltk import WordNetLemmatizer
 import pyLDAvis
 import pyLDAvis.gensim
-from langdetect import detect
+import spacy
+from spacy_langdetect import LanguageDetector
+from spacy.language import Language
 
 
 class Gensim_Topic_Modeling:
 
-    def __init__(self, df, column):
+    def __init__(self, df, column, english_only=True, language_score=0.9):
         self.data = df[df[column] != ''][column].dropna().astype(
             'str').tolist()
 
+        # Load a SpaCy model
+        self.nlp = spacy.load('en_core_web_sm')
+
+        # Add the language detector to the pipeline
+        @Language.factory("language_detector")
+        def get_lang_detector(nlp, name):
+            return LanguageDetector()
+
+        self.nlp.add_pipe('language_detector', last=True)
+        self.english_only = english_only
+        self.language_score = language_score
+
     def preprocessing(self):
         # Detect and keep only English texts
-        self.data = [sent for sent in self.data if detect(sent) == 'en']
+        if self.english_only:
+            self.data = [sent for sent in self.data if
+                    self.nlp(sent)._.language['language'] == 'en'
+                         and self.nlp(sent)._.language['score'] > self.language_score]
 
         self.data = [re.sub('\S*@\S*\s?', "", sent) for sent in self.data]
         self.data = [re.sub('\s+', ' ', sent) for sent in self.data]
