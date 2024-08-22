@@ -108,9 +108,9 @@ jobs:
         uses: elgohr/Publish-Docker-Github-Action@3.04
         with:
           dockerfile: Dockerfile
-          name: socialmediamacroscope/${{ inputs.specific_packages }}
+          name: socialmediamacroscope/${{ inputs.specific_package }}
           no_push: true
-          workdir: containerized_analytics/smile/${{ inputs.specific_packages }}
+          workdir: containerized_analytics/smile/${{ inputs.specific_package }}
 
       - name: Publish doc image to Docker Hub
         if: |
@@ -118,11 +118,11 @@ jobs:
         uses: elgohr/Publish-Docker-Github-Action@3.04
         with:
           registry: docker.io
-          name: socialmediamacroscope/${{ inputs.specific_packages }}
+          name: socialmediamacroscope/${{ inputs.specific_package }}
           username: ${{ secrets.HUB_USERNAME }}
           password: ${{ secrets.HUB_PASSWORD }}
           tags: "${{ env.TAGS }}"
-          workdir: containerized_analytics/smile/${{ inputs.specific_packages }}
+          workdir: containerized_analytics/smile/${{ inputs.specific_package }}
 
       - name: Publish doc image to Github
         if: |
@@ -130,8 +130,8 @@ jobs:
         uses: elgohr/Publish-Docker-Github-Action@3.04
         with:
           registry: ghcr.io
-          name: ncsa/${{ inputs.specific_packages }}
+          name: ncsa/${{ inputs.specific_package }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
           tags: "${{ env.TAGS }}"
-          workdir: containerized_analytics/smile/${{ inputs.specific_packages }}
+          workdir: containerized_analytics/smile/${{ inputs.specific_package }}
