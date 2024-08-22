@@ -12,6 +12,7 @@ ENV RABBITMQ_HOST="rabbitmq"
 # install dependency libraries and download required data
 RUN pip install --no-cache-dir -r requirement.txt \
 && python3 -m nltk.downloader -d /usr/local/share/nltk_data stopwords wordnet \
+&& python3 -m spacy download en_core_web_sm \
 # cron job clean tmp folder
 && chmod u+x ./clear_cache.sh \
 && chmod 0644 ./clear_cache_cron \

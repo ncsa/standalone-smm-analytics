@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Beta-2] - 08/31/2024
+
+### Changed
+- Github Manual action for more flexible docker image buliding and pushing [#126](https://github.com/ncsa/standalone-smm-analytics/issues/126)
+
 ## [Beta-1] - 01-23-2024
 
 ### Added
