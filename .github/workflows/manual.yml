@@ -50,7 +50,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        name: [${{ inputs.specific_package }}]
+        name: [${{ fromJSON(inputs.specific_items) }}]
         include:
           - name: autophrase
             dockerfile: Dockerfile
