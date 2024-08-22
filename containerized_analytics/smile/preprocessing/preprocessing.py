@@ -10,38 +10,21 @@ class Preprocess:
 
     def __init__(self, df, column):
 
-        self.id_column = "id"
-        if 'id_str' in df.columns:
-            self.id_column = 'id_str'
-            df_new = df[df[column] != ''][[self.id_column, column]].dropna()
-            sentences = df_new[column].astype('str').tolist()
-            self.id = df_new[self.id_column].astype('str').tolist()
-        elif 'id' in df.columns:
-            self.id_column = 'id'
-            df_new = df[df[column] != ''][[self.id_column, column]].dropna()
-            sentences = df_new[column].astype('str').tolist()
-            self.id = df_new[self.id_column].astype('str').tolist()
-        elif 'comment_id' in df.columns:
-            self.id_column = 'comment_id'
-            df_new = df[df[column] != ''][[self.id_column, column]].dropna()
-            sentences = df_new[column].astype('str').tolist()
-            self.id = df_new[self.id_column].astype('str').tolist()
-        elif '_source.id_str':
-            self.id_column = '_source.id_str'
-            df_new = df[df[column] != ''][[self.id_column, column]].dropna()
-            sentences = df_new[column].astype('str').tolist()
-            self.id = df_new[self.id_column].astype('str').tolist()
-        elif '_source.id':
-            self.id_column = '_source.id_str'
-            df_new = df[df[column] != ''][[self.id_column, column]].dropna()
-            sentences = df_new[column].astype('str').tolist()
-            self.id = df_new[self.id_column].astype('str').tolist()
-        else:
-            sentences = df[df[column] != ''][column].dropna().astype(
-                'str').tolist()
-            self.id = []
+        # Define potential id columns in order of precedence
+        potential_id_columns = ['id_str', 'id', 'comment_id', '_source.id_str', '_source.id']
 
-        sentences = [re.sub(r"http\S+", "", tweet) for tweet in sentences]
+        # Find the first available id column from the potential list
+        self.id_column = next((col for col in potential_id_columns if col in df.columns), 'index')
+
+        # If using index as the id_column, create a new column based on the index
+        if self.id_column == 'index':
+            df[self.id_column] = df.index.astype('str')
+
+        # Filter the dataframe based on the column condition
+        df_new = df[df[column] != ''][[self.id_column, column]].dropna()
+        sentences = [re.sub(r"http\S+", "", str(tweet)) for tweet in df_new[column].tolist()]
+
+        self.id = df_new[self.id_column].astype('str').tolist()
         self.sentences = sentences
 
     def get_phrases(self):
