@@ -4,24 +4,19 @@ on:
   workflow_dispatch:
     inputs:
       push_to_where:
-        description: 'Type either "dockerhub" or "github" to push to the respective registry'
+        description: 'Select the registry to push to'
         default: 'github'
         required: true
-        type: string
-
-env:
-  MAIN_REPO: ncsa/standalone-smm-analytics
-
-jobs:
-  # ----------------------------------------------------------------------
-  # DOCKER BUILD
-  # ----------------------------------------------------------------------
-  docker:
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: true
-      matrix:
-        name:
+        type: choice
+        options:
+          - github
+          - dockerhub
+      specific_package:
+        description: 'Select the specific package to build'
+        default: 'sentiment_analysis'
+        required: true
+        type: choice
+        options:
           - autophrase
           - histogram
           - check_screen_name
@@ -42,6 +37,20 @@ jobs:
           - clowder_create_space
           - clowder_list
           - clowder_upload_file
+
+env:
+  MAIN_REPO: ncsa/standalone-smm-analytics
+
+jobs:
+  # ----------------------------------------------------------------------
+  # DOCKER BUILD
+  # ----------------------------------------------------------------------
+  docker:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        name: [${{ inputs.specific_package }}]
         include:
           - name: autophrase
             dockerfile: Dockerfile
